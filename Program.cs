@@ -8,6 +8,7 @@ namespace Drive
 {
     public class Program
     {
+       
         private static Random random = new Random();
         public static int GetRandomNumber(int min, int max)
         {
@@ -16,6 +17,7 @@ namespace Drive
                 return random.Next(min, max);
             }
         }
+        public static int startpoint = GetRandomNumber(30, 50);
         public static List<string> banan = new List<string>();
         static void Main(string[] args)
         {
@@ -29,7 +31,6 @@ namespace Drive
 
         public static void SkapaBana()
         {
-            int startpoint = GetRandomNumber(30,50);
             int previous = 0;
             int addorsub;
             Random rnd = new Random();
@@ -43,7 +44,7 @@ namespace Drive
                     {
                         if (startpoint == j)
                         {
-                            first = first + "     ";
+                            first = first + emptySpaces(10);
                             j = j + 4;
                         }
                         else
@@ -82,14 +83,25 @@ namespace Drive
             }
         }
 
+        private static string emptySpaces(int x)
+        {
+            string empty = "";
+            for(int i = 0;i < x; i++)
+            {
+                empty = empty + " ";
+            }
+            return empty;
+        }
+
         private static void Banatillhöger(int previous, int addorsub, int i, int index)
         {
             string current = banan[i - 1];
             char[] chars = current.ToCharArray();
+            int randomnr = GetRandomNumber(1, 4);
             int low = 0;
-            int high = 5;
+            int high = 9;
             string main = "";
-            for (int c = addorsub; c > 0; c--)
+            for (int c = randomnr; c > 0; c--)
             {
                 if (index + 5 <= 80)
                 {
@@ -113,18 +125,19 @@ namespace Drive
         {
             string current = banan[previous];
             char[] chars = current.ToCharArray();
-            int low = addorsub;
-            int high = 4;
+            int randomnr = GetRandomNumber(-3, 0);
+            int low = -1;
+            int high = 9;
             string main = "";
-            for (int d = addorsub; d < 0; d++)
+            for (int d = randomnr; d < 0; d++)
             {
-                if (index - addorsub >= 0 && index + 4 <= 80)
+                if (index - addorsub >= 0 && index + 9 <= 80)
                 {
                     chars[index + low] = ' ';
                     chars[index + high] = '0';
                     string result1 = toString(chars);
                     main = result1;
-                    low = low + 1;
+                    low = low -1;
                     high = high - 1;
                 }
             }

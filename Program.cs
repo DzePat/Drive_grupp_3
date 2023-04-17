@@ -103,7 +103,7 @@ namespace Drive
                     }
                     else if (addorsub >= 1)
                     {
-                        banan.Add(movestringtoright(banan[previous]));
+                        banan.Add(movestringtoright2(banan[previous]));
 
                     }
                     else { banan.Add(banan[previous]); }
@@ -166,6 +166,19 @@ namespace Drive
             }
             return toString(chars);
         }
+
+        public static string movestringtoright2(string main)
+        {
+           string tomove = ""; 
+            for (int i = 0; i < main.Length; i++)
+            {  
+                if (i == 0) tomove += main[main.Length - 1];
+                else tomove += main[i-1];
+            }
+            return tomove;
+        }
+
+
         public static string movestringtoleft(string main)
         {
             string tomove = "";

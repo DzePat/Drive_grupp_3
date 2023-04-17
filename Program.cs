@@ -4,7 +4,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+
 using System.Data;
+
+using System.Runtime.InteropServices;
+
 
 namespace Drive
 {
@@ -20,49 +24,41 @@ namespace Drive
             }
         }
         public static int startpoint = GetRandomNumber(30, 50);
+
         public static List<string> banan = new List<string>();
         static void Main(string[] args)
         {
-            Console.SetWindowSize(82,30);
+            ConsoleKeyInfo input;
+            Console.SetWindowSize(82, 30);
             SkapaBana();
-            int i = 0;
+            string temp = "";
+            string bana = "";
+            int pos = 1600;
+
+            foreach (string c in banan)
+            {
+                bana = temp + c;
+                temp = $"{bana}\n";
+            }
             do
             {
-                Thread.Sleep(1);
-                Console.Clear();
-                Console.WriteLine(printbana().ToString());
+                //Console.WriteLine(bana);
+                if (Console.KeyAvailable == true)
+                {
+                    input = Console.ReadKey();
+                    if (input.Key == ConsoleKey.LeftArrow) --pos;
+                    else if (input.Key == ConsoleKey.RightArrow) ++pos;
+                };
+                StringBuilder sb = new StringBuilder(bana);
+                sb.Remove(pos, 2);
+                sb.Insert(pos, "<>");
+                Console.WriteLine(sb.ToString());
+                Thread.Sleep(33);
+                Console.SetCursorPosition(0, 0);
+                Console.CursorVisible = false;
             } while (true);
         }
-
-        public static StringBuilder printbana()
-        {
-            
-            string printstring = "";
-            for(int i = 0;i < banan.Count;i++)
-            {
-                if (i == 19)
-                {
-                    foreach (char ch in banan[i])
-                    {
-                        if (ch == ' ')
-                        {
-                            int index = banan[i].IndexOf(ch);
-                            index += 4;
-                            banan[i] = banan[i].Insert(index, "A");
-                            banan[i] = banan[i].Remove(index + 1, 1);
-                            printstring = printstring + banan[i];
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    printstring = printstring + banan[i] + "\n";
-                }
-            }
-            StringBuilder sb = new StringBuilder(printstring);
-            return sb;
-        }
+ 
 
         public static void SkapaBana()
         {
@@ -80,7 +76,7 @@ namespace Drive
                         if (startpoint == j)
                         {
                             first = first + emptySpaces(10);
-                            j = j + 4;
+                            j = j + 9;
                         }
                         else
                         {
@@ -104,12 +100,12 @@ namespace Drive
                     }
                     if (addorsub <= -1)
                     {
-                        banatillvänster(previous, addorsub, index);
+                        banatillvänster(previous);
 
                     }
                     else if (addorsub >= 1)
                     {
-                        Banatillhöger(previous, addorsub, i, index);
+                        Banatillhöger(previous);
 
                     }
                     else { banan.Add(banan[previous]); }
@@ -128,73 +124,56 @@ namespace Drive
             return empty;
         }
 
-        private static void Banatillhöger(int previous, int addorsub, int i, int index)
-        {
-            string current = banan[i - 1];
-            char[] chars = current.ToCharArray();
-            int randomnr = GetRandomNumber(1, 2);
-            int low = 0;
-            int high = 9;
-            string main = "";
-            for (int c = randomnr; c > 0; c--)
-            {
-                if (index + 5 <= 80)
-                {
-                    chars[index + low] = '0';
-                    chars[index + high] = ' ';
-                    string result2 = toString(chars);
-                    main = result2;
-                    low++;
-                    high++;
-                }
-
-            }
-            if (main != "")
-            {
-                banan.Add(main);
-            }
-            else { banan.Add(banan[previous]); }
-        }
-
-        private static void banatillvänster(int previous, int addorsub, int index)
+        private static void Banatillhöger(int previous)
         {
             string current = banan[previous];
-            char[] chars = current.ToCharArray();
-            int randomnr = GetRandomNumber(-1, 0);
-            int low = -1;
-            int high = 9;
-            string main = "";
-            for (int d = randomnr; d < 0; d++)
-            {
-                if (index - addorsub >= 0 && index + 9 <= 80)
+            banan.Add(movestringtoright(current));
+        }
+
+        private static void banatillvänster(int previous)
+        {
+            string current = banan[previous];
+            banan.Add(movestringtoleft(current));
+
+        }
+
+        public static string movestringtoright(string main)
+        {
+            char[] chars = main.ToCharArray();
+            char last = chars[chars.Length - 1];
+            char current;
+            char next = 'a';
+            for (int i = 0; i < main.Length-1;i++)
+            {       
+                if (i == 0)
                 {
-                    chars[index + low] = ' ';
-                    chars[index + high] = '0';
-                    string result1 = toString(chars);
-                    main = result1;
-                    low = low -1;
-                    high = high - 1;
+                    current = chars[chars.Length-1];
+                    next = chars[i];
+                    chars[i] = current;
+                }
+                else if(i > 0)
+                {
+                    current = chars[i];
+                    chars[i] = next;
+                    next = current;
                 }
             }
-            if (main != "")
-            {
-                banan.Add(main);
-            }
-            else { banan.Add(banan[previous]); }
+            return toString(chars);
         }
-       /* public static void movestringoleft(string main)
+        public static string movestringtoleft(string main)
         {
+            string tomove = "";
             char first = main[0];
             for(int i = 0; i < main.Length; i++)
             {
-                if (i < main.Length - 2)
+                if (i < main.Length - 1)
                 {
-                    main = main[i + 1];
-                }
-                
+                    tomove = tomove + main[i + 1];
+                }              
             }
-            banan[banan.Count - 1] = first;
-        }*/
+            tomove = tomove + first;
+            return tomove;
+        }
         public static string toString(char[] chars)
         {
             string thestring = "";

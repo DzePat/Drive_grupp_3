@@ -3,6 +3,7 @@
 
 ﻿using System;
 using System.Globalization;
+using System.Text;
 
 namespace Drive
 {
@@ -21,9 +22,25 @@ namespace Drive
         {
             Console.SetWindowSize(82,30);
             SkapaBana();
+            int i = 0;
             foreach (string c in banan)
             {
-                Console.WriteLine(c);
+                if (i == 19){
+                    foreach (char ch in c)
+                    {
+                        if (ch == ' ')
+                        {
+                            int index= c.IndexOf(ch);
+                            index += 2;
+                            StringBuilder sb = new StringBuilder(c);
+                            sb.Insert(index, "<>");
+                            Console.WriteLine(sb);
+                            break;
+                        } ;
+                    }
+                }
+                else Console.WriteLine(c);
+                i++;
             }
         }
 

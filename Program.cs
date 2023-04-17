@@ -4,6 +4,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using System.Data;
 
 namespace Drive
 {
@@ -25,15 +26,17 @@ namespace Drive
             Console.SetWindowSize(82,30);
             SkapaBana();
             int i = 0;
-            Console.WriteLine(printbana());
             do
-            {   
-                printbana();
+            {
+                Thread.Sleep(1);
+                Console.Clear();
+                Console.WriteLine(printbana().ToString());
             } while (true);
         }
 
-        public static string printbana()
+        public static StringBuilder printbana()
         {
+            
             string printstring = "";
             for(int i = 0;i < banan.Count;i++)
             {
@@ -45,8 +48,9 @@ namespace Drive
                         {
                             int index = banan[i].IndexOf(ch);
                             index += 4;
-                            banan[i] = banan[i].Insert(index, "<>");
-                            printstring = printstring + banan[i] + "\n";
+                            banan[i] = banan[i].Insert(index, "A");
+                            banan[i] = banan[i].Remove(index + 1, 1);
+                            printstring = printstring + banan[i];
                             break;
                         }
                     }
@@ -56,7 +60,8 @@ namespace Drive
                     printstring = printstring + banan[i] + "\n";
                 }
             }
-            return printstring;
+            StringBuilder sb = new StringBuilder(printstring);
+            return sb;
         }
 
         public static void SkapaBana()
@@ -127,7 +132,7 @@ namespace Drive
         {
             string current = banan[i - 1];
             char[] chars = current.ToCharArray();
-            int randomnr = GetRandomNumber(1, 4);
+            int randomnr = GetRandomNumber(1, 2);
             int low = 0;
             int high = 9;
             string main = "";
@@ -155,7 +160,7 @@ namespace Drive
         {
             string current = banan[previous];
             char[] chars = current.ToCharArray();
-            int randomnr = GetRandomNumber(-3, 0);
+            int randomnr = GetRandomNumber(-1, 0);
             int low = -1;
             int high = 9;
             string main = "";
@@ -177,7 +182,19 @@ namespace Drive
             }
             else { banan.Add(banan[previous]); }
         }
-
+       /* public static void movestringoleft(string main)
+        {
+            char first = main[0];
+            for(int i = 0; i < main.Length; i++)
+            {
+                if (i < main.Length - 2)
+                {
+                    main = main[i + 1];
+                }
+                
+            }
+            banan[banan.Count - 1] = first;
+        }*/
         public static string toString(char[] chars)
         {
             string thestring = "";

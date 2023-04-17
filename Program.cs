@@ -33,7 +33,7 @@ namespace Drive
             SkapaBana();
             string temp = "";
             string bana = "";
-            int pos = 1600;
+            int pos = getposition();
 
             foreach (string c in banan)
             {
@@ -42,7 +42,6 @@ namespace Drive
             }
             do
             {
-                //Console.WriteLine(bana);
                 if (Console.KeyAvailable == true)
                 {
                     input = Console.ReadKey();
@@ -50,8 +49,8 @@ namespace Drive
                     else if (input.Key == ConsoleKey.RightArrow) ++pos;
                 };
                 StringBuilder sb = new StringBuilder(bana);
-                sb.Remove(pos, 2);
-                sb.Insert(pos, "<>");
+                sb.Remove(pos, 1);
+                sb.Insert(pos, "A");
                 Console.WriteLine(sb.ToString());
                 Thread.Sleep(33);
                 Console.SetCursorPosition(0, 0);
@@ -75,7 +74,7 @@ namespace Drive
                     {
                         if (startpoint == j)
                         {
-                            first = first + emptySpaces(10);
+                            first = first + emptySpaces(11);
                             j = j + 9;
                         }
                         else
@@ -100,18 +99,39 @@ namespace Drive
                     }
                     if (addorsub <= -1)
                     {
-                        banatillvänster(previous);
-
+                        banan.Add(movestringtoleft(banan[previous]));
                     }
                     else if (addorsub >= 1)
                     {
-                        Banatillhöger(previous);
+                        banan.Add(movestringtoright(banan[previous]));
 
                     }
                     else { banan.Add(banan[previous]); }
                 }
                 previous = i;
             }
+        }
+
+        public static int getposition()
+        {
+            int lastrow = banan.Count;
+            int pos = 0;
+            string bana = "";
+            string temp = "";
+            foreach (string c in banan)
+            {
+                bana = temp + c;
+                temp = $"{bana}\n";
+            }
+            for(int i = 1590;i < 1639; i++)
+            {
+                if (bana[i] == ' ')
+                {
+                    pos = i + 5;
+                    break;
+                }
+            }
+            return pos;
         }
 
         private static string emptySpaces(int x)
@@ -123,20 +143,6 @@ namespace Drive
             }
             return empty;
         }
-
-        private static void Banatillhöger(int previous)
-        {
-            string current = banan[previous];
-            banan.Add(movestringtoright(current));
-        }
-
-        private static void banatillvänster(int previous)
-        {
-            string current = banan[previous];
-            banan.Add(movestringtoleft(current));
-
-        }
-
         public static string movestringtoright(string main)
         {
             char[] chars = main.ToCharArray();

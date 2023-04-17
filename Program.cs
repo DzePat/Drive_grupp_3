@@ -19,6 +19,7 @@ namespace Drive
         public static List<string> banan = new List<string>();
         static void Main(string[] args)
         {
+            Console.SetWindowSize(82,30);
             SkapaBana();
             foreach (string c in banan)
             {

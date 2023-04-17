@@ -4,6 +4,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace Drive
 {
@@ -22,41 +23,35 @@ namespace Drive
         public static List<string> banan = new List<string>();
         static void Main(string[] args)
         {
-            Console.SetWindowSize(82,30);
+            ConsoleKeyInfo input;
+            Console.SetWindowSize(82,30); 
             SkapaBana();
             int i = 0;
-            Console.WriteLine(printbana());
-            do
-            {   
-                printbana();
-            } while (true);
-        }
-
-        public static string printbana()
-        {
-            string printstring = "";
-            for(int i = 0;i < banan.Count;i++)
+            string temp = "";
+            string bana = "";
+            int pos = 1600;
+            foreach (string c in banan)
             {
-                if (i == 19)
-                {
-                    foreach (char ch in banan[i])
-                    {
-                        if (ch == ' ')
-                        {
-                            int index = banan[i].IndexOf(ch);
-                            index += 4;
-                            banan[i] = banan[i].Insert(index, "<>");
-                            printstring = printstring + banan[i] + "\n";
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    printstring = printstring + banan[i] + "\n";
-                }
+                bana = temp + c;
+                temp = $"{bana}\n";
             }
-            return printstring;
+            do
+            {
+                //Console.WriteLine(bana);
+                if (Console.KeyAvailable == true)
+                {
+                    input = Console.ReadKey();
+                    Console.WriteLine(input.Key.ToString());
+                    if (input.Key == ConsoleKey.LeftArrow) --pos;
+                    else if (input.Key == ConsoleKey.RightArrow) ++pos;
+                };
+                StringBuilder sb = new StringBuilder(bana);
+                sb.Remove(pos, 2);
+                sb.Insert(pos, "<>");
+                Console.WriteLine(sb.ToString());
+                Thread.Sleep(33);
+                Console.Clear();
+            } while (true);
         }
 
         public static void SkapaBana()

@@ -8,7 +8,7 @@ using System.Text;
 using System.Data;
 
 using System.Runtime.InteropServices;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace Drive
 {
@@ -61,6 +61,7 @@ namespace Drive
 
         public static void SkapaBana()
         {
+            int prevaddorsub = 0;
             int previous = 0;
             int addorsub;
             Random rnd = new Random();
@@ -87,7 +88,13 @@ namespace Drive
                 }
                 else if (i != 0)
                 {
-                    addorsub = rnd.Next(-1, 2);
+                    
+                        int min = -4; 
+                        int max = 5;
+                    if (prevaddorsub < 0) max = 2; //vägen svängde till vänster förra gågngen 
+                    if (prevaddorsub > 0) min = -1;
+
+                    addorsub = rnd.Next(min, max);
                     int index = 0;
                     foreach(char c in banan[previous])
                     {
@@ -107,8 +114,9 @@ namespace Drive
 
                     }
                     else { banan.Add(banan[previous]); }
+                    prevaddorsub = addorsub;
                 }
-                previous = i;
+                previous = i; 
             }
         }
 

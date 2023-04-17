@@ -25,25 +25,38 @@ namespace Drive
             Console.SetWindowSize(82,30);
             SkapaBana();
             int i = 0;
-            foreach (string c in banan)
+            Console.WriteLine(printbana());
+            do
+            {   
+                printbana();
+            } while (true);
+        }
+
+        public static string printbana()
+        {
+            string printstring = "";
+            for(int i = 0;i < banan.Count;i++)
             {
-                if (i == 19){
-                    foreach (char ch in c)
+                if (i == 19)
+                {
+                    foreach (char ch in banan[i])
                     {
                         if (ch == ' ')
                         {
-                            int index= c.IndexOf(ch);
-                            index += 2;
-                            StringBuilder sb = new StringBuilder(c);
-                            sb.Insert(index, "<>");
-                            Console.WriteLine(sb);
+                            int index = banan[i].IndexOf(ch);
+                            index += 4;
+                            banan[i] = banan[i].Insert(index, "<>");
+                            printstring = printstring + banan[i] + "\n";
                             break;
-                        } ;
+                        }
                     }
                 }
-                else Console.WriteLine(c);
-                i++;
+                else
+                {
+                    printstring = printstring + banan[i] + "\n";
+                }
             }
+            return printstring;
         }
 
         public static void SkapaBana()

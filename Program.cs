@@ -17,7 +17,7 @@ namespace Drive
     public class Program
     {
 
-        private static Random random = new Random();
+        /*private static Random random = new Random();
         public static int GetRandomNumber(int min, int max)
         {
             lock (random)
@@ -28,7 +28,7 @@ namespace Drive
         public static int startpoint = GetRandomNumber(30, 50);
         public static int prevaddorsub = 0;
         public static List<string> banan = new List<string>();
-        public static int roadwidth = 20;
+        public static int roadwidth = 20;*/
         public static int speed = 250;
         static void Main(string[] args)
         {
@@ -43,13 +43,13 @@ namespace Drive
             if (gameIsPlayed)
             {
                 Initialize();
-                CreateTrack();
+                TrackClass.CreateTrack();
                 int pos = CountDown();
                 do
                 {
                     string temp = "";
                     string bana = "";
-                    foreach (string c in banan)
+                    foreach (string c in TrackClass.banan)
                     {
                         bana = temp + c;
                         temp = $"{bana}\n";
@@ -79,7 +79,7 @@ namespace Drive
                     Thread.Sleep(speed);
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
-                    MoveForward();
+                    TrackClass.MoveForward();
                 } while (true);
             }
 
@@ -95,7 +95,7 @@ namespace Drive
                 }
             }
 
-            static void CreateTrack()
+            /*static void CreateTrack()
             {
 
                 
@@ -187,9 +187,9 @@ namespace Drive
                     empty = empty + " ";
                 }
                 return empty;
-            }
+            }*/
 
-            static void MoveForward()
+            /*static void MoveForward()
             {
                 string firstele = banan[0];
                 int min = -4;
@@ -241,7 +241,7 @@ namespace Drive
                 }
                 tomove = tomove + first;
                 return tomove;
-            }
+            }*/
 
             static string ToString(char[] chars)
             {
@@ -272,19 +272,19 @@ namespace Drive
                 {
                     if (key.Key == ConsoleKey.D1 || key.Key == ConsoleKey.NumPad1)
                     {
-                        roadwidth = 15;
+                        TrackClass.roadwidth = 15;
                         speed = 250;
                         check = false;
                     }
                     else if (key.Key == ConsoleKey.D2 || key.Key == ConsoleKey.NumPad2)
                     {
-                        roadwidth = 13;
+                        TrackClass.roadwidth = 13;
                         speed = 175;
                         check = false;
                     }
                     else if (key.Key == ConsoleKey.D3 || key.Key == ConsoleKey.NumPad3)
                     {
-                        roadwidth = 11;
+                        TrackClass.roadwidth = 11;
                         speed = 100;
                         check = false;
                     }
@@ -424,7 +424,7 @@ namespace Drive
                 Console.Write("Start!!!");
                 Thread.Sleep(500);
                 Console.Clear();
-                int pos = GetPosition();
+                int pos = TrackClass.GetPosition();
                 return pos;
             }
         }

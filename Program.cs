@@ -9,6 +9,8 @@ using System.Data;
 
 using System.Runtime.InteropServices;
 
+using System.ComponentModel.DataAnnotations;
+
 namespace Drive
 {
     public class Program
@@ -27,13 +29,13 @@ namespace Drive
         public static List<string> banan = new List<string>();
         static void Main(string[] args)
         {
+
             int points = 0;
             bool gameIsPlayed = true;
-            int previous = 0;
+
             ConsoleKeyInfo input;
 
 
-            
             if (gameIsPlayed)
             {
                 Initialize();
@@ -148,12 +150,11 @@ namespace Drive
                     previous = i;
                 }
             }
-
-           /* void CreateNewRow()
-            {
-           //TBD: bryta ut en "skapa ny rad" function utifrån Skapa Bana
-            }
-           */
+            /* void CreateNewRow()
+             {
+            //TBD: bryta ut en "skapa ny rad" function utifrån Skapa Bana
+             }
+            */
 
             static int getposition()
             {
@@ -210,6 +211,7 @@ namespace Drive
                 }
                 return toString(chars);
             }
+
 
             static string movestringtoright2(string main)
             {
@@ -303,22 +305,22 @@ namespace Drive
             }
 
             //TBD Update() function för att växa fram banen, Vänta på CreateNewRow() funtion
-           /* void Update()
-            {
-                int lastRow = banan.Count() - 1;
-                banan.RemoveAt(lastRow);
+            /* void Update()
+             {
+                 int lastRow = banan.Count() - 1;
+                 banan.RemoveAt(lastRow);
 
-                for (int i = lastRow - 1; i > 0; i--)
-                {
+                 for (int i = lastRow - 1; i > 0; i--)
+                 {
 
-                    var item = banan[i];
-                    banan.RemoveAt(i);
-                    banan.Insert(i + 1, item);
-                }
-                var newItem = CreateNewRow(previous);
-                banan.Insert(0, newItem);
-            }
-           */
+                     var item = banan[i];
+                     banan.RemoveAt(i);
+                     banan.Insert(i + 1, item);
+                 }
+                 var newItem = CreateNewRow(previous);
+                 banan.Insert(0, newItem);
+             }
+            */
 
             void GameOver()
             {

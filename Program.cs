@@ -70,7 +70,7 @@ namespace Drive
                         GameOver();
                     }
                     Console.WriteLine(sb.ToString());
-                    Thread.Sleep(30);
+                    Thread.Sleep(300);
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
                     moveforward();
@@ -341,6 +341,47 @@ namespace Drive
                  banan.Insert(0, newItem);
              }
             */
+
+            void HighScore()
+            {
+                string[] playerpoints = File.ReadAllLines("points.txt");
+                int player = 0;
+                Console.WriteLine("Highscore list\nPoints      Player namne");
+                while (player < playerpoints.Length)
+                {
+                    string[] printArray = playerpoints[player].Split("|");
+                    Console.WriteLine($"{printArray[0]}         {printArray[1]}");
+                    player++;
+                }
+            }
+
+            void AddHighScore(int scoreplayer) //Can't add to list, only uppdate
+            {
+                string[] playerpoints = File.ReadAllLines("points.txt");
+                int player = 0;
+                while (player < playerpoints.Length)
+                {
+                    string[] printArray = playerpoints[player].Split("|");
+                    if (scoreplayer > Int32.Parse(printArray[0]))
+                    {
+                        Console.WriteLine($"Congratulations, you are {player + 1} on the highscore list");
+                        Console.Write("Your name?: ");
+                        //  string playerName = Console.ReadLine();
+                        string newPlayerPoints = $"{scoreplayer.ToString()}|{Console.ReadLine()}";
+                        playerpoints[player] = newPlayerPoints;
+                        break;
+                    }
+                    player++;
+                }
+                using (StreamWriter file = new StreamWriter("points.txt"))
+                {
+                    foreach (string line in playerpoints)
+                    {
+                        file.WriteLine(line);
+                    }
+                }
+            }
+
 
             void GameOver()
             {

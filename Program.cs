@@ -44,15 +44,7 @@ namespace Drive
             {
                 Initialize();
                 CreateTrack();
-                for (int i = 3; i > 0; i--)
-                {
-                    Console.Write($"{i}...");
-                    Thread.Sleep(500);
-                }
-                Console.Write("Start!!!");
-                Thread.Sleep(500);
-                Console.Clear();
-                int pos = GetPosition();
+                int pos = CountDown();
                 do
                 {
                     string temp = "";
@@ -68,7 +60,7 @@ namespace Drive
                         if (input.Key == ConsoleKey.LeftArrow) --pos;
                         else if (input.Key == ConsoleKey.RightArrow) ++pos;
                         else if (input.Key == ConsoleKey.UpArrow) pos -= 83;
-                        else if (input.Key == ConsoleKey.DownArrow) if(pos+83 < 1659) { pos += 83; }
+                        else if (input.Key == ConsoleKey.DownArrow) if (pos+83 < 1659) { pos += 83; }
                     };
                     StringBuilder sb = new StringBuilder(bana);
                     if (bana[pos] == ' ')
@@ -81,7 +73,7 @@ namespace Drive
                         sb.Remove(pos, 1);
                         sb.Insert(pos, "X");
                         Thread.Sleep(100);
-                        GameOver(); 
+                        GameOver();
                     }
                     Console.WriteLine(sb.ToString());
                     Thread.Sleep(speed);
@@ -307,7 +299,7 @@ namespace Drive
             }
 
 
-            void TimerPoints()
+            void TimerPoints() 
             {
                 int seconds = 0;
                 int minutes = 0;
@@ -422,7 +414,19 @@ namespace Drive
 
             }
 
-
+            static int CountDown()
+            {
+                for (int i = 3; i > 0; i--)
+                {
+                    Console.Write($"{i}...");
+                    Thread.Sleep(500);
+                }
+                Console.Write("Start!!!");
+                Thread.Sleep(500);
+                Console.Clear();
+                int pos = GetPosition();
+                return pos;
+            }
         }
     }
 }

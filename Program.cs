@@ -25,21 +25,23 @@ namespace Drive
             }
         }
         public static int startpoint = GetRandomNumber(30, 50);
-
+        public static int prevaddorsub = 0;
         public static List<string> banan = new List<string>();
         static void Main(string[] args)
         {
-
+            
             int points = 0;
             bool gameIsPlayed = true;
 
             ConsoleKeyInfo input;
-
+            
+            Menu();
 
             if (gameIsPlayed)
             {
                 Initialize();
                 SkapaBana();
+               
                 int pos = getposition();
                 do
                 {
@@ -95,7 +97,7 @@ namespace Drive
             static void SkapaBana()
             {
 
-                int prevaddorsub = 0;
+                
                 int previous = 0;
                 int addorsub;
                 Random rnd = new Random();
@@ -194,7 +196,11 @@ namespace Drive
             static void moveforward()
             {
                 string firstele = banan[0];
-                int randomnumber = GetRandomNumber(-1,2);
+                int min = -4;
+                int max = 5;
+                if (prevaddorsub < 0) max = 2; //vägen svängde till vänster förra gågngen 
+                if (prevaddorsub > 0) min = -1;
+                int randomnumber = GetRandomNumber(min,max);
                 if(randomnumber >= 1)
                 {
                     banan.Insert(0, movestringtoright2(firstele));
@@ -208,6 +214,7 @@ namespace Drive
                     banan.Insert(0, firstele);
                 }
                 banan.RemoveAt(banan.Count- 1);
+                prevaddorsub = randomnumber;
             }
 
             static string movestringtoright(string main)
@@ -275,33 +282,14 @@ namespace Drive
             {
                 Console.WriteLine("This is a car game.");
                 Console.WriteLine("Stay on the road!");
-                Console.WriteLine("Use left, right and up arrows to control your car.");
+                Console.WriteLine("Use left and right arrows to control your car.");
                 //Console.WriteLine($"Try to beat the highscore {XX} points"); //NYI
                 Console.WriteLine("Press enter to start: ");
-                while (Console.ReadKey().Key != ConsoleKey.Enter) ;
+                while (Console.ReadKey().Key != ConsoleKey.Enter) 
                 {
-                    ConsoleKey key = Console.ReadKey().Key;
-                    if (key == ConsoleKey.Enter)
-                    {//FIXME buggar ibland när man startar? vet inte varför
-                        Console.Clear();
-                        gameIsPlayed = true;
-                    }
+                     //   
                 }
-
-
-                /* do
-                 {
-                     //NYI - show game start on console
-                     ConsoleKey key = Console.ReadKey().Key;
-                     if (key == ConsoleKey.LeftArrow) { }
-                     else if (key == ConsoleKey.RightArrow) { }
-                     else if (key == ConsoleKey.UpArrow) { }
-                     else if (key == ConsoleKey.Escape || key == ConsoleKey.Q || key == ConsoleKey.X)
-                     { Console.WriteLine("\nGame is interrupted"); break; }
-                     else Console.WriteLine("wrong input");
-                 } while (true);
-                */
-
+                Console.Clear();
             }
 
 
@@ -344,6 +332,46 @@ namespace Drive
                  banan.Insert(0, newItem);
              }
             */
+
+            void HighScore()
+            {
+                string[] playerpoints = File.ReadAllLines("points.txt");
+                int player = 0;
+                Console.WriteLine("Highscore list\nPoints      Player namne");
+                while (player < playerpoints.Length)
+                {
+                    string[] printArray = playerpoints[player].Split("|");
+                    Console.WriteLine($"{printArray[0]}         {printArray[1]}");
+                    player++;
+                }
+            }
+
+            void AddHighScore(int scoreplayer) //Can't add to list, only uppdate
+            {
+                string[] playerpoints = File.ReadAllLines("points.txt");
+                int player = 0;
+                while (player < playerpoints.Length)
+                {
+                    string[] printArray = playerpoints[player].Split("|");
+                    if (scoreplayer > Int32.Parse(printArray[0]))
+                    {
+                        Console.WriteLine($"Congratulations, you are {player + 1} on the highscore list");
+                        Console.Write("Your name?: ");
+                        string newPlayerPoints = $"{scoreplayer.ToString()}|{Console.ReadLine()}";
+                        playerpoints[player] = newPlayerPoints;
+                        break;
+                    }
+                    player++;
+                }
+                using (StreamWriter file = new StreamWriter("points.txt"))
+                {
+                    foreach (string line in playerpoints)
+                    {
+                        file.WriteLine(line);
+                    }
+                }
+            }
+
 
             void GameOver()
             {

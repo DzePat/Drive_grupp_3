@@ -29,6 +29,7 @@ namespace Drive
         public static int prevaddorsub = 0;
         public static List<string> banan = new List<string>();
         public static int roadwidth = 20;
+        public static int speed = 250;
         static void Main(string[] args)
         {
             
@@ -83,7 +84,7 @@ namespace Drive
                         GameOver(); 
                     }
                     Console.WriteLine(sb.ToString());
-                    Thread.Sleep(120);
+                    Thread.Sleep(speed);
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
                     moveforward();
@@ -179,7 +180,7 @@ namespace Drive
                 {
                     if (bana[i] == ' ')
                     {
-                        pos = i + 5;
+                        pos = i + (roadwidth/2);
                         break;
                     }
                 }
@@ -270,6 +271,23 @@ namespace Drive
                 while (Console.ReadKey().Key != ConsoleKey.Enter) 
                 {
                      //   
+                }
+                Console.Clear();
+                Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
+                ConsoleKeyInfo key = Console.ReadKey();
+                if(key.Key == ConsoleKey.D1) {
+                    roadwidth = 15;
+                    speed = 250;
+                }
+                else if(key.Key == ConsoleKey.D2)
+                {
+                    roadwidth = 13;
+                    speed = 175;
+                }
+                else if(key.Key == ConsoleKey.D3)
+                {
+                    roadwidth = 11;
+                    speed = 100;
                 }
                 Console.Clear();
             }

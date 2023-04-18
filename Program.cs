@@ -70,7 +70,7 @@ namespace Drive
                         GameOver();
                     }
                     Console.WriteLine(sb.ToString());
-                    Thread.Sleep(300);
+                    Thread.Sleep(30);
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
                     moveforward();

@@ -41,7 +41,14 @@ namespace Drive
             {
                 Initialize();
                 SkapaBana();
-               
+                for (int i = 3; i > 0; i--)
+                {
+                    Console.Write($"{i}...");
+                    Thread.Sleep(500);
+                }
+                Console.Write("Start!!!");
+                Thread.Sleep(500);
+                Console.Clear();
                 int pos = getposition();
                 do
                 {
@@ -76,7 +83,7 @@ namespace Drive
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
                     moveforward();
-                } while (true);
+                } while (gameIsPlayed);
             }
 
 

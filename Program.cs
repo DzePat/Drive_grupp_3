@@ -25,11 +25,11 @@ namespace Drive
             }
         }
         public static int startpoint = GetRandomNumber(30, 50);
-
+        public static int prevaddorsub = 0;
         public static List<string> banan = new List<string>();
         static void Main(string[] args)
         {
-
+            
             int points = 0;
             bool gameIsPlayed = true;
 
@@ -94,7 +94,7 @@ namespace Drive
             static void SkapaBana()
             {
 
-                int prevaddorsub = 0;
+                
                 int previous = 0;
                 int addorsub;
                 Random rnd = new Random();
@@ -193,7 +193,11 @@ namespace Drive
             static void moveforward()
             {
                 string firstele = banan[0];
-                int randomnumber = GetRandomNumber(-1,2);
+                int min = -4;
+                int max = 5;
+                if (prevaddorsub < 0) max = 2; //vägen svängde till vänster förra gågngen 
+                if (prevaddorsub > 0) min = -1;
+                int randomnumber = GetRandomNumber(min,max);
                 if(randomnumber >= 1)
                 {
                     banan.Insert(0, movestringtoright2(firstele));
@@ -207,6 +211,7 @@ namespace Drive
                     banan.Insert(0, firstele);
                 }
                 banan.RemoveAt(banan.Count- 1);
+                prevaddorsub = randomnumber;
             }
 
             static string movestringtoright(string main)
@@ -274,7 +279,7 @@ namespace Drive
             {
                 Console.WriteLine("This is a car game.");
                 Console.WriteLine("Stay on the road!");
-                Console.WriteLine("Use left and right to control your car.");
+                Console.WriteLine("Use left and right arrows to control your car.");
                 //Console.WriteLine($"Try to beat the highscore {XX} points"); //NYI
                 Console.WriteLine("Press enter to start: ");
                 while (Console.ReadKey().Key != ConsoleKey.Enter) 
@@ -349,7 +354,6 @@ namespace Drive
                     {
                         Console.WriteLine($"Congratulations, you are {player + 1} on the highscore list");
                         Console.Write("Your name?: ");
-                        //  string playerName = Console.ReadLine();
                         string newPlayerPoints = $"{scoreplayer.ToString()}|{Console.ReadLine()}";
                         playerpoints[player] = newPlayerPoints;
                         break;

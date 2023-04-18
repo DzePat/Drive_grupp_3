@@ -43,7 +43,7 @@ namespace Drive
             if (gameIsPlayed)
             {
                 Initialize();
-                SkapaBana();
+                CreateTrack();
                 for (int i = 3; i > 0; i--)
                 {
                     Console.Write($"{i}...");
@@ -52,7 +52,7 @@ namespace Drive
                 Console.Write("Start!!!");
                 Thread.Sleep(500);
                 Console.Clear();
-                int pos = getposition();
+                int pos = GetPosition();
                 do
                 {
                     string temp = "";
@@ -87,7 +87,7 @@ namespace Drive
                     Thread.Sleep(speed);
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
-                    moveforward();
+                    MoveForward();
                 } while (true);
             }
 
@@ -103,7 +103,7 @@ namespace Drive
                 }
             }
 
-            static void SkapaBana()
+            static void CreateTrack()
             {
 
                 
@@ -120,7 +120,7 @@ namespace Drive
                         {
                             if (startpoint == j)
                             {
-                                first = first + emptySpaces(roadwidth);
+                                first = first + EmptySpaces(roadwidth);
                                 j = j + roadwidth-2;
                             }
                             else
@@ -151,11 +151,11 @@ namespace Drive
                         }
                         if (addorsub <= -1)
                         {
-                            banan.Add(movestringtoleft(banan[previous]));
+                            banan.Add(MoveStringToLeft(banan[previous]));
                         }
                         else if (addorsub >= 1)
                         {
-                            banan.Add(movestringtoright(banan[previous]));
+                            banan.Add(MoveStringToRight(banan[previous]));
 
                         }
                         else { banan.Add(banan[previous]); }
@@ -165,7 +165,7 @@ namespace Drive
                 }
             }
 
-            static int getposition()
+            static int GetPosition()
             {
                 int lastrow = banan.Count;
                 int pos = 0;
@@ -187,7 +187,7 @@ namespace Drive
                 return pos;
             }
 
-            static string emptySpaces(int x)
+            static string EmptySpaces(int x)
             {
                 string empty = "";
                 for (int i = 0; i < x; i++)
@@ -197,7 +197,7 @@ namespace Drive
                 return empty;
             }
 
-            static void moveforward()
+            static void MoveForward()
             {
                 string firstele = banan[0];
                 int min = -4;
@@ -211,11 +211,11 @@ namespace Drive
                 int randomnumber = GetRandomNumber(min,max);
                 if(randomnumber >= 1 && firstele[firstele.Length - 1] != ' ')
                 {
-                    banan.Insert(0, movestringtoright(firstele));
+                    banan.Insert(0, MoveStringToRight(firstele));
                 }
                 else if(randomnumber <= -1 && firstele[0] != ' ') 
                 {
-                    banan.Insert(0,movestringtoleft(firstele));
+                    banan.Insert(0,MoveStringToLeft(firstele));
                 }
                 else
                 {
@@ -225,7 +225,7 @@ namespace Drive
                 prevaddorsub = randomnumber;
             }
 
-            static string movestringtoright(string main)
+            static string MoveStringToRight(string main)
             {
                 string tomove = "";
                 for (int i = 0; i < main.Length; i++)
@@ -236,7 +236,7 @@ namespace Drive
                 return tomove;
             }
 
-            static string movestringtoleft(string main)
+            static string MoveStringToLeft(string main)
             {
                 string tomove = "";
                 char first = main[0];
@@ -251,7 +251,7 @@ namespace Drive
                 return tomove;
             }
 
-            static string toString(char[] chars)
+            static string ToString(char[] chars)
             {
                 string thestring = "";
                 foreach (char c in chars)

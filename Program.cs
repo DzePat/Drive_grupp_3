@@ -27,6 +27,7 @@ namespace Drive
         public static int startpoint = GetRandomNumber(30, 50);
         public static int prevaddorsub = 0;
         public static List<string> banan = new List<string>();
+        public static int roadwidth = 20;
         static void Main(string[] args)
         {
             
@@ -78,7 +79,6 @@ namespace Drive
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
                     moveforward();
-                    Console.WriteLine(bana.Length);
                 } while (true);
             }
 
@@ -111,8 +111,8 @@ namespace Drive
                         {
                             if (startpoint == j)
                             {
-                                first = first + emptySpaces(11);
-                                j = j + 9;
+                                first = first + emptySpaces(roadwidth);
+                                j = j + roadwidth-2;
                             }
                             else
                             {
@@ -146,7 +146,7 @@ namespace Drive
                         }
                         else if (addorsub >= 1)
                         {
-                            banan.Add(movestringtoright2(banan[previous]));
+                            banan.Add(movestringtoright(banan[previous]));
 
                         }
                         else { banan.Add(banan[previous]); }
@@ -155,11 +155,6 @@ namespace Drive
                     previous = i;
                 }
             }
-            /* void CreateNewRow()
-             {
-            //TBD: bryta ut en "skapa ny rad" function utifrån Skapa Bana
-             }
-            */
 
             static int getposition()
             {
@@ -198,14 +193,16 @@ namespace Drive
                 string firstele = banan[0];
                 int min = -4;
                 int max = 5;
+                if (firstele[0] == ' ' ) max += 1;
+                if (firstele[firstele.Length - 1] == ' ') min -= 1;
                 if (prevaddorsub < 0) max = 2; //vägen svängde till vänster förra gågngen 
                 if (prevaddorsub > 0) min = -1;
                 int randomnumber = GetRandomNumber(min,max);
-                if(randomnumber >= 1)
+                if(randomnumber >= 1 && firstele[firstele.Length - 1] != ' ')
                 {
-                    banan.Insert(0, movestringtoright2(firstele));
+                    banan.Insert(0, movestringtoright(firstele));
                 }
-                else if(randomnumber <= -1) 
+                else if(randomnumber <= -1 && firstele[0] != ' ') 
                 {
                     banan.Insert(0,movestringtoleft(firstele));
                 }
@@ -218,31 +215,6 @@ namespace Drive
             }
 
             static string movestringtoright(string main)
-            {
-                char[] chars = main.ToCharArray();
-                char last = chars[chars.Length - 1];
-                char current;
-                char next = 'a';
-                for (int i = 0; i < main.Length - 1; i++)
-                {
-                    if (i == 0)
-                    {
-                        current = chars[chars.Length - 1];
-                        next = chars[i];
-                        chars[i] = current;
-                    }
-                    else if (i > 0)
-                    {
-                        current = chars[i];
-                        chars[i] = next;
-                        next = current;
-                    }
-                }
-                return toString(chars);
-            }
-
-
-            static string movestringtoright2(string main)
             {
                 string tomove = "";
                 for (int i = 0; i < main.Length; i++)

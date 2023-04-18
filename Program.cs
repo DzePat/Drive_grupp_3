@@ -40,17 +40,16 @@ namespace Drive
             {
                 Initialize();
                 SkapaBana();
-                string temp = "";
-                string bana = "";
                 int pos = getposition();
-
-                foreach (string c in banan)
-                {
-                    bana = temp + c;
-                    temp = $"{bana}\n";
-                }
                 do
                 {
+                    string temp = "";
+                    string bana = "";
+                    foreach (string c in banan)
+                    {
+                        bana = temp + c;
+                        temp = $"{bana}\n";
+                    }
                     if (Console.KeyAvailable == true)
                     {
                         input = Console.ReadKey();
@@ -71,9 +70,10 @@ namespace Drive
                         GameOver();
                     }
                     Console.WriteLine(sb.ToString());
-                    Thread.Sleep(33);
+                    Thread.Sleep(300);
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
+                    moveforward();
                 } while (true);
             }
 
@@ -188,6 +188,25 @@ namespace Drive
                 return empty;
             }
 
+            static void moveforward()
+            {
+                string firstele = banan[0];
+                int randomnumber = GetRandomNumber(-1,2);
+                if(randomnumber >= 1)
+                {
+                    banan.Insert(0, movestringtoright2(firstele));
+                }
+                else if(randomnumber <= -1) 
+                {
+                    banan.Insert(0,movestringtoleft(firstele));
+                }
+                else
+                {
+                    banan.Insert(0, firstele);
+                }
+                banan.RemoveAt(banan.Count- 1);
+            }
+
             static string movestringtoright(string main)
             {
                 char[] chars = main.ToCharArray();
@@ -281,6 +300,7 @@ namespace Drive
                 */
 
             }
+
 
             void TimerPoints()
             {

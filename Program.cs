@@ -34,12 +34,14 @@ namespace Drive
             bool gameIsPlayed = true;
 
             ConsoleKeyInfo input;
-
+            
+            Menu();
 
             if (gameIsPlayed)
             {
                 Initialize();
                 SkapaBana();
+               
                 int pos = getposition();
                 do
                 {
@@ -272,33 +274,14 @@ namespace Drive
             {
                 Console.WriteLine("This is a car game.");
                 Console.WriteLine("Stay on the road!");
-                Console.WriteLine("Use left, right and up arrows to control your car.");
+                Console.WriteLine("Use left and right to control your car.");
                 //Console.WriteLine($"Try to beat the highscore {XX} points"); //NYI
                 Console.WriteLine("Press enter to start: ");
-                while (Console.ReadKey().Key != ConsoleKey.Enter) ;
+                while (Console.ReadKey().Key != ConsoleKey.Enter) 
                 {
-                    ConsoleKey key = Console.ReadKey().Key;
-                    if (key == ConsoleKey.Enter)
-                    {//FIXME buggar ibland när man startar? vet inte varför
-                        Console.Clear();
-                        gameIsPlayed = true;
-                    }
+                     //   
                 }
-
-
-                /* do
-                 {
-                     //NYI - show game start on console
-                     ConsoleKey key = Console.ReadKey().Key;
-                     if (key == ConsoleKey.LeftArrow) { }
-                     else if (key == ConsoleKey.RightArrow) { }
-                     else if (key == ConsoleKey.UpArrow) { }
-                     else if (key == ConsoleKey.Escape || key == ConsoleKey.Q || key == ConsoleKey.X)
-                     { Console.WriteLine("\nGame is interrupted"); break; }
-                     else Console.WriteLine("wrong input");
-                 } while (true);
-                */
-
+                Console.Clear();
             }
 
 

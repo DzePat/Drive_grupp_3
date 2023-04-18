@@ -278,19 +278,19 @@ namespace Drive
                 bool check = true;
                 while (check)
                 {
-                    if (key.Key == ConsoleKey.D1)
+                    if (key.Key == ConsoleKey.D1 || key.Key == ConsoleKey.NumPad1)
                     {
                         roadwidth = 15;
                         speed = 250;
                         check = false;
                     }
-                    else if (key.Key == ConsoleKey.D2)
+                    else if (key.Key == ConsoleKey.D2 || key.Key == ConsoleKey.NumPad2)
                     {
                         roadwidth = 13;
                         speed = 175;
                         check = false;
                     }
-                    else if (key.Key == ConsoleKey.D3)
+                    else if (key.Key == ConsoleKey.D3 || key.Key == ConsoleKey.NumPad3)
                     {
                         roadwidth = 11;
                         speed = 100;

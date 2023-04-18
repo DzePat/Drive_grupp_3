@@ -275,19 +275,33 @@ namespace Drive
                 Console.Clear();
                 Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
                 ConsoleKeyInfo key = Console.ReadKey();
-                if(key.Key == ConsoleKey.D1) {
-                    roadwidth = 15;
-                    speed = 250;
-                }
-                else if(key.Key == ConsoleKey.D2)
+                bool check = true;
+                while (check)
                 {
-                    roadwidth = 13;
-                    speed = 175;
-                }
-                else if(key.Key == ConsoleKey.D3)
-                {
-                    roadwidth = 11;
-                    speed = 100;
+                    if (key.Key == ConsoleKey.D1)
+                    {
+                        roadwidth = 15;
+                        speed = 250;
+                        check = false;
+                    }
+                    else if (key.Key == ConsoleKey.D2)
+                    {
+                        roadwidth = 13;
+                        speed = 175;
+                        check = false;
+                    }
+                    else if (key.Key == ConsoleKey.D3)
+                    {
+                        roadwidth = 11;
+                        speed = 100;
+                        check = false;
+                    }
+                    else 
+                    { 
+                        Console.Clear();
+                        Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
+                        key = Console.ReadKey();
+                    }
                 }
                 Console.Clear();
             }

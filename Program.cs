@@ -10,6 +10,7 @@ using System.Data;
 using System.Runtime.InteropServices;
 
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 
 namespace Drive
 {
@@ -35,14 +36,21 @@ namespace Drive
             bool gameIsPlayed = true;
 
             ConsoleKeyInfo input;
-            
+          
             Menu();
-
+            
             if (gameIsPlayed)
             {
                 Initialize();
                 SkapaBana();
-               
+                for (int i = 3; i > 0; i--)
+                {
+                    Console.Write($"{i}...");
+                    Thread.Sleep(500);
+                }
+                Console.Write("Start!!!");
+                Thread.Sleep(500);
+                Console.Clear();
                 int pos = getposition();
                 do
                 {
@@ -71,11 +79,11 @@ namespace Drive
                     {
                         sb.Remove(pos, 1);
                         sb.Insert(pos, "X");
-                        Thread.Sleep(300);
-                        GameOver();
+                        Thread.Sleep(100);
+                        GameOver(); 
                     }
                     Console.WriteLine(sb.ToString());
-                    Thread.Sleep(200);
+                    Thread.Sleep(120);
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
                     moveforward();
@@ -197,6 +205,8 @@ namespace Drive
                 if (firstele[firstele.Length - 1] == ' ') min -= 1;
                 if (prevaddorsub < 0) max = 2; //vägen svängde till vänster förra gågngen 
                 if (prevaddorsub > 0) min = -1;
+                if(firstele.First() == ' ')min = 1;
+                if (firstele.Last() == ' ') max = -1;
                 int randomnumber = GetRandomNumber(min,max);
                 if(randomnumber >= 1 && firstele[firstele.Length - 1] != ' ')
                 {

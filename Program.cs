@@ -1,4 +1,5 @@
 
+
 using System.ComponentModel;
 
 using System;
@@ -11,6 +12,7 @@ using System.Runtime.InteropServices;
 
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Diagnostics;
 
 namespace Drive
 {
@@ -20,19 +22,23 @@ namespace Drive
         public static int speed = 250;
         static void Main(string[] args)
         {
-            
             int points = 0;
-            bool gameIsPlayed = true;
+            int time = 0;
+            int pointsMultiplier = 10;
+            bool gameIsPlayed = false;
 
             ConsoleKeyInfo input;
-          
+
             Menu();
-            
+
             if (gameIsPlayed)
             {
                 Initialize();
                 TrackClass.CreateTrack();
                 int pos = CountDown();
+
+                var sw = new Stopwatch();
+                sw.Start();
                 do
                 {
                     string temp = "";
@@ -48,7 +54,7 @@ namespace Drive
                         if (input.Key == ConsoleKey.LeftArrow) --pos;
                         else if (input.Key == ConsoleKey.RightArrow) ++pos;
                         else if (input.Key == ConsoleKey.UpArrow) pos -= 83;
-                        else if (input.Key == ConsoleKey.DownArrow) if (pos+83 < 1659) { pos += 83; }
+                        else if (input.Key == ConsoleKey.DownArrow) if (pos + 83 < 1659) { pos += 83; }
                     };
                     StringBuilder sb = new StringBuilder(bana);
                     if (bana[pos] == ' ')
@@ -63,7 +69,17 @@ namespace Drive
                         Thread.Sleep(100);
                         GameOver();
                     }
+
+                    // Top bar
+                    points = CalculatePoints(time, pointsMultiplier);
+                    var topBar = GetTopBarString(time, points);
+                    Console.WriteLine(topBar);
+
+                    // Race track
                     Console.WriteLine(sb.ToString());
+
+                    // Tick
+                    time = sw.Elapsed.Seconds;
                     Thread.Sleep(speed);
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
@@ -100,9 +116,9 @@ namespace Drive
                 Console.WriteLine("Use left and right arrows to control your car.");
                 //Console.WriteLine($"Try to beat the highscore {XX} points"); //NYI
                 Console.WriteLine("Press enter to start: ");
-                while (Console.ReadKey().Key != ConsoleKey.Enter) 
+                while (Console.ReadKey().Key != ConsoleKey.Enter)
                 {
-                     //   
+                    //   
                 }
                 Console.Clear();
                 Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
@@ -114,70 +130,50 @@ namespace Drive
                     {
                         TrackClass.roadwidth = 15;
                         speed = 250;
+                        pointsMultiplier = 10;
                         check = false;
                     }
                     else if (key.Key == ConsoleKey.D2 || key.Key == ConsoleKey.NumPad2)
                     {
                         TrackClass.roadwidth = 13;
                         speed = 175;
+                        pointsMultiplier = 20;
                         check = false;
                     }
                     else if (key.Key == ConsoleKey.D3 || key.Key == ConsoleKey.NumPad3)
                     {
                         TrackClass.roadwidth = 11;
                         speed = 100;
+                        pointsMultiplier = 30;
                         check = false;
                     }
-                    else 
-                    { 
+                    else
+                    {
                         Console.Clear();
                         Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
                         key = Console.ReadKey();
                     }
                 }
                 Console.Clear();
+                gameIsPlayed = true;
             }
 
-
-            void TimerPoints() 
+            int CalculatePoints(int time, int pointsMultiplier)
             {
-                int seconds = 0;
-                int minutes = 0;
+                int points = time * pointsMultiplier;
 
-                int pointsMultiplier = 10;
-
-                while (gameIsPlayed)
-                {
-                    Thread.Sleep(TimeSpan.FromMilliseconds(1000));
-                    seconds++;
-                    points = (seconds + (minutes * 60)) * pointsMultiplier;
-
-                    if (seconds == 60)
-                    {
-                        seconds = 0;
-                        minutes++;
-                    }
-                    Console.Write(seconds.ToString("D2") + ":" + minutes.ToString("D2").PadRight(10) + "Points: " + points);
-                }
+                return points;
             }
 
-            //TBD Update() function för att växa fram banen, Vänta på CreateNewRow() funtion
-            /* void Update()
-             {
-                 int lastRow = banan.Count() - 1;
-                 banan.RemoveAt(lastRow);
+            string GetTopBarString(int time, int points)
+            {
+                int minutes = time / 60;
+                int seconds = time % 60;
+                string minutesString = minutes.ToString("D2");
+                string secondsString = seconds.ToString("D2");
 
-                 for (int i = lastRow - 1; i > 0; i--)
-                 {
-
-                     var item = banan[i];
-                     banan.RemoveAt(i);
-                     banan.Insert(i + 1, item);
-                 }
-                 var newItem = CreateNewRow(previous);
-                 banan.Insert(0, newItem);
-             }
-            */
+                return $"Time {secondsString}:{minutesString} ============= Points: {points}";
+            }
 
             void HighScore()
             {
@@ -268,5 +264,6 @@ namespace Drive
                 return pos;
             }
         }
+
     }
 }

@@ -48,6 +48,7 @@ namespace Drive
                         bana = temp + c;
                         temp = $"{bana}\n";
                     }
+                    Console.WriteLine(bana.Length);
                     if (Console.KeyAvailable == true)
                     {
                         input = Console.ReadKey();

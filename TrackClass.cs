@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Drive
 {
-    internal class TrackClass
+    public class TrackClass
     {
         private static Random random = new Random();
         public static int GetRandomNumber(int min, int max)
@@ -98,7 +98,7 @@ namespace Drive
                         if (startpoint == j)
                         {
                             first = first + EmptySpaces(roadwidth);
-                            j = j + roadwidth-2;
+                            j = j + roadwidth;
                         }
                         else
                         {
@@ -144,7 +144,6 @@ namespace Drive
         public static int GetPosition()
 
         {
-            int lastrow = banan.Count;
             int pos = 0;
             string bana = "";
             string temp = "";
@@ -153,7 +152,7 @@ namespace Drive
                 bana = temp + c;
                 temp = $"{bana}\n";
             }
-            for (int i = 1590; i < 1639; i++)
+            for (int i = 1539; i < 1619; i++)
             {
                 if (bana[i] == ' ')
                 {

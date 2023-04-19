@@ -152,7 +152,7 @@ namespace Drive
                 bana = temp + c;
                 temp = $"{bana}\n";
             }
-            for (int i = 1539; i < 1619; i++)
+            for (int i = bana.Length-80; i < bana.Length; i++)
             {
                 if (bana[i] == ' ')
                 {

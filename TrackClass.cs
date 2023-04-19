@@ -1,4 +1,11 @@
+
 ﻿using System;
+
+﻿using Drive;
+
+
+using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -77,7 +84,6 @@ namespace Drive
         public static void CreateTrack()
         {
 
-
             int previous = 0;
             int RandomNumber;
             Random rnd = new Random();
@@ -135,7 +141,8 @@ namespace Drive
                 previous = i;
             }
         }
-       public static int GetPosition()
+        public static int GetPosition()
+
         {
             int lastrow = banan.Count;
             int pos = 0;
@@ -150,7 +157,9 @@ namespace Drive
             {
                 if (bana[i] == ' ')
                 {
-                    pos = i + (roadwidth/2);
+                  
+                    pos = i + (roadwidth / 2);
+
                     break;
                 }
             }

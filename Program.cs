@@ -156,6 +156,8 @@ namespace Drive
                 }
                 Console.Clear();
                 gameIsPlayed = true;
+                time = 0;
+                points = 0;
             }
 
             int CalculatePoints(int time, int pointsMultiplier)
@@ -214,7 +216,6 @@ namespace Drive
                 }
             }
 
-
             void GameOver()
             {
                 gameIsPlayed = false;
@@ -247,7 +248,6 @@ namespace Drive
                         Console.WriteLine("Invalid answer, please answer 'Y' for yes or 'N' for no");
                     }
                 }
-
             }
 
             static int CountDown()

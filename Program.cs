@@ -27,6 +27,8 @@ namespace Drive
             int time = 0;
             int pointsMultiplier = 10;
             bool gameIsPlayed = false;
+            int playerLife = 3;
+            int damageTaken = 1;
 
             ConsoleKeyInfo input;
 
@@ -70,6 +72,9 @@ namespace Drive
                         Thread.Sleep(100);
                         GameOver();
                     }
+                    //Life-chart
+                    string life = SetLife(playerLife, damageTaken, gameIsPlayed);
+                    Console.WriteLine(life);
 
                     // Top bar
                     points = CalculatePoints(time, pointsMultiplier);
@@ -88,6 +93,22 @@ namespace Drive
                 } while (true);
             }
 
+            string SetLife(int playerLife, int damageTaken, bool gameIsPlayed)
+            {
+                int newLife = 3;
+                if (playerLife >= damageTaken && gameIsPlayed == false)
+                {
+                    newLife = playerLife - damageTaken;
+                    //TODO: återgå till spel vid position på något vänster
+                    gameIsPlayed = true;
+                }
+                else if (gameIsPlayed == false && playerLife == 0)
+                {
+                    GameOver();
+                }
+
+                return $"Life:    {newLife} / {playerLife}";
+            }
 
             static void Initialize()
             {

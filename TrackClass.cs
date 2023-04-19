@@ -13,9 +13,15 @@ using System.Threading.Tasks;
 
 namespace Drive
 {
-    internal class TrackClass
+    public class TrackClass
     {
         private static Random random = new Random();
+        public static int startpoint = GetRandomNumber(30, 50);
+        public static int prevRandom = 0;
+        public static List<string> banan = new List<string>();
+        public static int roadwidth = 20;
+
+        //gives a random number between min and max
         public static int GetRandomNumber(int min, int max)
         {
             lock (random)
@@ -23,11 +29,8 @@ namespace Drive
                 return random.Next(min, max);
             }
         }
-        public static int startpoint = GetRandomNumber(30, 50);
-        public static int prevaddorsub = 0;
-        public static List<string> banan = new List<string>();
-        public static int roadwidth = 20;
-
+        //generates a string wich has moves to left/right and adds it as first index in the list
+        //then removes last index to keep the list of length 20
         public static void MoveForward()
         {
             string firstele = banan[0];
@@ -35,8 +38,8 @@ namespace Drive
             int max = 5;
             if (firstele[0] == ' ') max += 1;
             if (firstele[firstele.Length - 1] == ' ') min -= 1;
-            if (prevaddorsub < 0) max = 2; //vägen svängde till vänster förra gågngen 
-            if (prevaddorsub > 0) min = -1;
+            if (prevRandom < 0) max = 2; //vägen svängde till vänster förra gågngen 
+            if (prevRandom > 0) min = -1;
             if (firstele.First() == ' ') min = 1;
             if (firstele.Last() == ' ') max = -1;
             int randomnumber = GetRandomNumber(min, max);
@@ -53,9 +56,9 @@ namespace Drive
                 banan.Insert(0, firstele);
             }
             banan.RemoveAt(banan.Count- 1);
-            prevaddorsub = randomnumber;
+            prevRandom = randomnumber;
         }
-
+        //moves string one index forward
         public static string MoveStringToRight(string main)
         {
             string tomove = "";
@@ -66,7 +69,7 @@ namespace Drive
             }
             return tomove;
         }
-
+        // moves string one index backwards
         public static string MoveStringToLeft(string main)
         {
             string tomove = "";
@@ -81,11 +84,12 @@ namespace Drive
             tomove = tomove + first;
             return tomove;
         }
+        //generates a track with random movments
         public static void CreateTrack()
         {
-
+            banan.Clear();
             int previous = 0;
-            int addorsub;
+            int RandomNumber;
             Random rnd = new Random();
             for (int i = 0; i < 20; i++)
             {
@@ -98,7 +102,7 @@ namespace Drive
                         if (startpoint == j)
                         {
                             first = first + EmptySpaces(roadwidth);
-                            j = j + roadwidth-2;
+                            j = j + roadwidth;
                         }
                         else
                         {
@@ -113,10 +117,10 @@ namespace Drive
 
                     int min = -4;
                     int max = 5;
-                    if (prevaddorsub < 0) max = 2; //vägen svängde till vänster förra gågngen 
-                    if (prevaddorsub > 0) min = -1;
+                    if (prevRandom < 0) max = 2; //vägen svängde till vänster förra gågngen 
+                    if (prevRandom > 0) min = -1;
 
-                    addorsub = rnd.Next(min, max);
+                    RandomNumber = rnd.Next(min, max);
                     int index = 0;
                     foreach (char c in banan[previous])
                     {
@@ -126,25 +130,25 @@ namespace Drive
                         }
                         else { index++; }
                     }
-                    if (addorsub <= -1)
+                    if (RandomNumber <= -1)
                     {
                         banan.Add(MoveStringToLeft(banan[previous]));
                     }
-                    else if (addorsub >= 1)
+                    else if (RandomNumber >= 1)
                     {
                         banan.Add(MoveStringToRight(banan[previous]));
 
                     }
                     else { banan.Add(banan[previous]); }
-                    prevaddorsub = addorsub;
+                    prevRandom = RandomNumber;
                 }
                 previous = i;
             }
         }
+        // returns a position of the last row in the middle of empty spaces
         public static int GetPosition()
 
         {
-            int lastrow = banan.Count;
             int pos = 0;
             string bana = "";
             string temp = "";
@@ -153,7 +157,7 @@ namespace Drive
                 bana = temp + c;
                 temp = $"{bana}\n";
             }
-            for (int i = 1590; i < 1639; i++)
+            for (int i = (bana.Length)-80; i < bana.Length; i++)
             {
                 if (bana[i] == ' ')
                 {
@@ -166,6 +170,7 @@ namespace Drive
             return pos;
         }
 
+        //returns a string of empty spaces 
         public static string EmptySpaces(int x)
         {
             string empty = "";

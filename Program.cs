@@ -20,250 +20,287 @@ namespace Drive
     {
 
         public static int speed = 250;
+        public static int playerpos = 0;
+        public static int playerLife = 3;
+        public static string defaultPointFile = "..\\..\\..\\points.txt";
+        public static int points = 0;
+        public static int time = 0;
+        public static int pointsMultiplier = 10;
+        public static bool gameIsPlayed = true;
+        public static int damageTaken = 1;
+        public static int timecheck = 0;
         static void Main(string[] args)
         {
-            int points = 0;
-            int time = 0;
-            int pointsMultiplier = 10;
-            bool gameIsPlayed = false;
-
             ConsoleKeyInfo input;
-
             Menu();
-
-            if (gameIsPlayed)
+            Initialize();
+            TrackClass.CreateTrack();
+            CountDown();
+            int life = SetLife(0);
+            var sw = new Stopwatch();
+            sw.Start();
+            do
             {
-                Initialize();
-                TrackClass.CreateTrack();
-                int pos = CountDown();
-
-                var sw = new Stopwatch();
-                sw.Start();
-                do
+                string temp = "";
+                string bana = "";
+                foreach (string c in TrackClass.banan)
                 {
-                    string temp = "";
-                    string bana = "";
-                    foreach (string c in TrackClass.banan)
-                    {
-                        bana = temp + c;
-                        temp = $"{bana}\n";
-                    }
-                    if (Console.KeyAvailable == true)
-                    {
-                        input = Console.ReadKey();
-                        if (input.Key == ConsoleKey.LeftArrow) --pos;
-                        else if (input.Key == ConsoleKey.RightArrow) ++pos;
-                        else if (input.Key == ConsoleKey.UpArrow) pos -= 83;
-                        else if (input.Key == ConsoleKey.DownArrow) if (pos + 83 < 1659) { pos += 83; }
-                    };
-                    StringBuilder sb = new StringBuilder(bana);
-                    if (bana[pos] == ' ')
-                    {
-                        sb.Remove(pos, 1);
-                        sb.Insert(pos, "A");
-                    }
-                    else
-                    {
-                        sb.Remove(pos, 1);
-                        sb.Insert(pos, "X");
-                        Thread.Sleep(100);
-                        GameOver();
-                    }
-
-                    // Top bar
-                    points = CalculatePoints(time, pointsMultiplier);
-                    var topBar = GetTopBarString(time, points);
-                    Console.WriteLine(topBar);
-
-                    // Race track
-                    Console.WriteLine(sb.ToString());
-
-                    // Tick
-                    time = sw.Elapsed.Seconds;
-                    Thread.Sleep(speed);
-                    Console.SetCursorPosition(0, 0);
-                    Console.CursorVisible = false;
-                    TrackClass.MoveForward();
-                } while (true);
-            }
-
-
-            static void Initialize()
-            {
-                int width = 82;
-                int height = 30;
-
-                if (OperatingSystem.IsWindows())
-                {
-                    Console.SetWindowSize(width, height);
+                    bana = temp + c;
+                    temp = $"{bana}\n";
                 }
-            }
-
-            static string ToString(char[] chars)
-            {
-                string thestring = "";
-                foreach (char c in chars)
+                if (Console.KeyAvailable == true)
                 {
-                    thestring = thestring + c;
+                    input = Console.ReadKey();
+                    if (input.Key == ConsoleKey.LeftArrow) --playerpos;
+                    else if (input.Key == ConsoleKey.RightArrow) ++playerpos;
+                    else if (input.Key == ConsoleKey.UpArrow) { if (playerpos + 83 > 200) { playerpos -= 83; } }
+                    else if (input.Key == ConsoleKey.DownArrow) if (playerpos + 83 < 1659) { playerpos += 83; }
+                };
+                StringBuilder sb = new StringBuilder(bana);
+                if (bana[playerpos] == ' ')
+                {
+                    sb.Remove(playerpos, 1);
+                    sb.Insert(playerpos, "A");
                 }
-                return thestring;
-            }
-
-            void Menu()
-            {
-                Console.WriteLine("This is a car game.");
-                Console.WriteLine("Stay on the road!");
-                Console.WriteLine("Use left and right arrows to control your car.");
-                //Console.WriteLine($"Try to beat the highscore {XX} points"); //NYI
-                Console.WriteLine("Press enter to start: ");
-                while (Console.ReadKey().Key != ConsoleKey.Enter)
+                else
                 {
-                    //   
-                }
-                Console.Clear();
-                Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
-                ConsoleKeyInfo key = Console.ReadKey();
-                bool check = true;
-                while (check)
-                {
-                    if (key.Key == ConsoleKey.D1 || key.Key == ConsoleKey.NumPad1)
+                    sb.Remove(playerpos, 1);
+                    sb.Insert(playerpos, "X");
+                    Thread.Sleep(100);
+                    life = SetLife(1);
+                    if (timecheck == 1)
                     {
-                        TrackClass.roadwidth = 15;
-                        speed = 250;
-                        pointsMultiplier = 10;
-                        check = false;
-                    }
-                    else if (key.Key == ConsoleKey.D2 || key.Key == ConsoleKey.NumPad2)
-                    {
-                        TrackClass.roadwidth = 13;
-                        speed = 175;
-                        pointsMultiplier = 20;
-                        check = false;
-                    }
-                    else if (key.Key == ConsoleKey.D3 || key.Key == ConsoleKey.NumPad3)
-                    {
-                        TrackClass.roadwidth = 11;
-                        speed = 100;
-                        pointsMultiplier = 30;
-                        check = false;
-                    }
-                    else
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
-                        key = Console.ReadKey();
+                        sw.Restart();
+                        time = 0;
+                        points = 0;
+                        timecheck = 0;
                     }
                 }
-                Console.Clear();
-                gameIsPlayed = true;
-                time = 0;
-                points = 0;
-            }
+                //Life-chart
+               
+                // Top bar
+                points = CalculatePoints(time, pointsMultiplier);
+                var topBar = GetTopBarString(time, points, life);
+                Console.WriteLine(topBar);
 
-            int CalculatePoints(int time, int pointsMultiplier)
+                // Race track
+                Console.WriteLine(sb.ToString());
+
+                // Tick
+                time = sw.Elapsed.Seconds;
+                Thread.Sleep(speed);
+                Console.SetCursorPosition(0, 0);
+                Console.CursorVisible = false;
+                TrackClass.MoveForward();
+            } while (true);
+        }
+        //takes damage as argument and returns the amount of lifes left 
+        //if player has 0 lifes initiates gameover method
+        static int SetLife(int damageTaken)
+        {
+
+            if (playerLife != 0 && gameIsPlayed == true)
             {
-                int points = time * pointsMultiplier;
-
-                return points;
+                playerLife = playerLife - damageTaken;
+                playerpos = TrackClass.GetPosition();
             }
-
-            string GetTopBarString(int time, int points)
+            else
             {
-                int minutes = time / 60;
-                int seconds = time % 60;
-                string minutesString = minutes.ToString("D2");
-                string secondsString = seconds.ToString("D2");
-
-                return $"Time {secondsString}:{minutesString} ============= Points: {points}";
+                GameOver();
             }
+            return playerLife;
+        }
 
-            void HighScore()
+        //initializes console window width/height
+        static void Initialize()
+        {
+            int width = 82;
+            int height = 30;
+
+            if (OperatingSystem.IsWindows())
             {
-                string[] playerpoints = File.ReadAllLines("points.txt");
-                int player = 0;
-                Console.WriteLine("Highscore list\nPoints      Player namne");
-                while (player < playerpoints.Length)
+                Console.SetWindowSize(width, height);
+            }
+        }
+        //prints out the menu and takes player input to select dificulty
+        static void Menu()
+        {
+            Console.WriteLine("This is a car game.");
+            Console.WriteLine("Stay on the road!");
+            Console.WriteLine("Use left and right arrows to control your car.");
+            //NYI It�s possible to add new features/functions later.
+            Console.WriteLine("Press enter to start: ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter)
+            {
+                //   
+            }
+            Console.Clear();
+            Console.WriteLine("Choose difficulty:\n1: Easy\n2: Normal\n3: Hard");
+            ConsoleKeyInfo key = Console.ReadKey();
+            bool check = true;
+            while (check)
+            {
+                if (key.Key == ConsoleKey.D1 || key.Key == ConsoleKey.NumPad1)
                 {
-                    string[] printArray = playerpoints[player].Split("|");
-                    Console.WriteLine($"{printArray[0]}         {printArray[1]}");
-                    player++;
+                    TrackClass.roadwidth = 15;
+                    speed = 250;
+                    pointsMultiplier = 10;
+                    check = false;
+                }
+                else if (key.Key == ConsoleKey.D2 || key.Key == ConsoleKey.NumPad2)
+                {
+                    TrackClass.roadwidth = 13;
+                    speed = 175;
+                    pointsMultiplier = 20;
+                    check = false;
+                }
+                else if (key.Key == ConsoleKey.D3 || key.Key == ConsoleKey.NumPad3)
+                {
+                    TrackClass.roadwidth = 11;
+                    speed = 100;
+                    pointsMultiplier = 30;
+                    check = false;
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
+                    key = Console.ReadKey();
                 }
             }
+            Console.Clear();
+            gameIsPlayed = true;
+            time = 0;
+            points = 0;
+        }
+        //caculates the amount of points earned each second multplied by the pointsmultiplier
+        static int CalculatePoints(int time, int pointsMultiplier)
+        {
+            int points = time * pointsMultiplier;
 
-            void AddHighScore(int scoreplayer) //Can't add to list, only uppdate
+            return points;
+        }
+        //prints out the tob bar which contains timer elapsed, points scored and lives
+        static string GetTopBarString(int time, int points, int playerLife)
+        {
+            int newLife = 3;
+            int minutes = time / 60;
+            int seconds = time % 60;
+            string minutesString = minutes.ToString("D2");
+            string secondsString = seconds.ToString("D2");
+            
+            return $"Time {secondsString}:{minutesString} ============= Points: {points} ============ Life:  {newLife} / {playerLife}";
+        }
+        //prints out the current highscores
+        static void HighScore()
+        {
+            string[] playerpoints = File.ReadAllLines(defaultPointFile);
+            int player = 0;
+            Console.WriteLine("Highscore list\nPoints      Player namne");
+            while (player < playerpoints.Length)
             {
-                string[] playerpoints = File.ReadAllLines("points.txt");
-                int player = 0;
-                while (player < playerpoints.Length)
-                {
-                    string[] printArray = playerpoints[player].Split("|");
-                    if (scoreplayer > Int32.Parse(printArray[0]))
-                    {
-                        Console.WriteLine($"Congratulations, you are {player + 1} on the highscore list");
-                        Console.Write("Your name?: ");
-                        string newPlayerPoints = $"{scoreplayer.ToString()}|{Console.ReadLine()}";
-                        playerpoints[player] = newPlayerPoints;
-                        break;
-                    }
-                    player++;
-                }
-                using (StreamWriter file = new StreamWriter("points.txt"))
-                {
-                    foreach (string line in playerpoints)
-                    {
-                        file.WriteLine(line);
-                    }
-                }
+                string[] printArray = playerpoints[player].Split("|");
+                Console.WriteLine($"{printArray[0],6}         {printArray[1],9}");
+                player++;
             }
-
-            void GameOver()
+        }
+        //adds player score to the highscores
+        static void AddHighScore(int scoreplayer) //Can't add to list, only uppdate
+        {
+            string[] playerpoints = File.ReadAllLines(defaultPointFile);
+            int player = 0;
+            while (player < playerpoints.Length)
             {
-                gameIsPlayed = false;
-                Console.Clear();
-                Console.WriteLine("GAME OVER!");
-                Thread.Sleep(TimeSpan.FromMilliseconds(1000));
-                Console.WriteLine($"Your score: {points}");
-                while (true)
+                string[] printArray = playerpoints[player].Split("|");
+                if (scoreplayer > Int32.Parse(printArray[0]))
                 {
-                    Console.WriteLine("Play Again?");
-                    Console.WriteLine("'Y' / 'N'");
-                    char answer = Console.ReadKey().KeyChar;
-                    if (answer == 'Y' || answer == 'y')
-                    {
-                        Console.Clear();
-                        Menu();
-                        return;
-                    }
-                    else if (answer == 'N' || answer == 'n')
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Thanks for playing");
-                        Thread.Sleep(TimeSpan.FromMilliseconds(1000));
-                        Environment.Exit(0);
-                        return;
-                    }
-                    else
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Invalid answer, please answer 'Y' for yes or 'N' for no");
-                    }
+                    Console.WriteLine($"Congratulations, you are {player + 1} on the highscore list");
+                    Console.Write("Your name?: ");
+                    string newPlayerPoints = $"{scoreplayer.ToString()}|{Console.ReadLine()}";
+                    playerpoints[player] = newPlayerPoints;
+                    break;
                 }
+                player++;
             }
-
-            static int CountDown()
+            using (StreamWriter file = new StreamWriter(defaultPointFile))
             {
-                for (int i = 3; i > 0; i--)
+                foreach (string line in playerpoints)
                 {
-                    Console.Write($"{i}...");
-                    Thread.Sleep(500);
+                    file.WriteLine(line);
                 }
-                Console.Write("Start!!!");
-                Thread.Sleep(500);
-                Console.Clear();
-                int pos = TrackClass.GetPosition();
-                return pos;
             }
         }
 
+        //prints out the game over message if the player hit the wall and has 0 lives left.
+        //Adds player points to highscores and prints out the current highscores
+        //Asks player if you want to try again? if yes player resets on a new track with 0 time elapsed.
+        static void GameOver()
+
+        {
+            Console.Clear();
+            if (playerLife == 0)
+            {
+                Console.WriteLine("GAME OVER!");
+                Thread.Sleep(TimeSpan.FromMilliseconds(1000));
+                Console.WriteLine($"Your score: {points}");
+                Console.CursorVisible = true;
+                AddHighScore(points);
+                HighScore();
+                Thread.Sleep(5000);
+                Console.Clear();
+                TrackClass.banan.Clear();
+                TrackClass.CreateTrack();
+            }
+            while (true)
+            {
+                Console.WriteLine("Play Again?");
+                Console.WriteLine("'Y' / 'N'");
+                char answer = Console.ReadKey().KeyChar;
+                if (answer == 'Y' || answer == 'y')
+                {
+                    Console.Clear();
+                    Menu();
+                    reset();
+                    timecheck = 1;
+                    return;
+                }
+                else if (answer == 'N' || answer == 'n')
+                {
+                    Console.Clear();
+                    Console.WriteLine("Thanks for playing");
+                    Thread.Sleep(TimeSpan.FromMilliseconds(1000));
+                    Environment.Exit(0);
+                    return;
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid answer, please answer 'Y' for yes or 'N' for no");
+                }
+            }
+        }
+        //starts to the coundown from 3 to 1
+        static void CountDown()
+        {
+            for (int i = 3; i > 0; i--)
+            {
+                Console.Write($"{i}...");
+                Thread.Sleep(500);
+            }
+            Console.Write("Start!!!");
+            Thread.Sleep(500);
+            Console.Clear();
+            playerpos = TrackClass.GetPosition();
+        }
+        //resets track, player life and starts the countdown again
+        static void reset()
+        {
+            TrackClass.banan.Clear();
+            TrackClass.CreateTrack();
+            playerLife = 3;
+            CountDown();
+        }
     }
+
 }
+

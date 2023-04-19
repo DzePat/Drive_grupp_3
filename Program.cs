@@ -20,13 +20,14 @@ namespace Drive
     {
 
         public static int speed = 250;
+        public static int playerpos = 0;
         static void Main(string[] args)
         {
             string defaultPointFile = "..\\..\\..\\points.txt";
             int points = 0;
             int time = 0;
             int pointsMultiplier = 10;
-            bool gameIsPlayed = false;
+            bool gameIsPlayed = true;
             int playerLife = 3;
             int damageTaken = 1;
 
@@ -38,8 +39,8 @@ namespace Drive
             {
                 Initialize();
                 TrackClass.CreateTrack();
-                int pos = CountDown();
-
+                CountDown();
+                string life = SetLife(0, gameIsPlayed);
                 var sw = new Stopwatch();
                 sw.Start();
                 do
@@ -54,26 +55,25 @@ namespace Drive
                     if (Console.KeyAvailable == true)
                     {
                         input = Console.ReadKey();
-                        if (input.Key == ConsoleKey.LeftArrow) --pos;
-                        else if (input.Key == ConsoleKey.RightArrow) ++pos;
-                        else if (input.Key == ConsoleKey.UpArrow) { if (pos + 83 > 200) { pos -= 83; } }
-                        else if (input.Key == ConsoleKey.DownArrow) if (pos + 83 < 1659) { pos += 83; }
+                        if (input.Key == ConsoleKey.LeftArrow) --playerpos;
+                        else if (input.Key == ConsoleKey.RightArrow) ++playerpos;
+                        else if (input.Key == ConsoleKey.UpArrow) { if (playerpos + 83 > 200) { playerpos -= 83; } }
+                        else if (input.Key == ConsoleKey.DownArrow) if (playerpos + 83 < 1659) { playerpos += 83; }
                     };
                     StringBuilder sb = new StringBuilder(bana);
-                    if (bana[pos] == ' ')
+                    if (bana[playerpos] == ' ')
                     {
-                        sb.Remove(pos, 1);
-                        sb.Insert(pos, "A");
+                        sb.Remove(playerpos, 1);
+                        sb.Insert(playerpos, "A");
                     }
                     else
                     {
-                        sb.Remove(pos, 1);
-                        sb.Insert(pos, "X");
+                        sb.Remove(playerpos, 1);
+                        sb.Insert(playerpos, "X");
                         Thread.Sleep(100);
-                        GameOver();
+                        life = SetLife(1, gameIsPlayed);
                     }
                     //Life-chart
-                    string life = SetLife(playerLife, damageTaken, gameIsPlayed);
                     Console.WriteLine(life);
 
                     // Top bar
@@ -93,20 +93,18 @@ namespace Drive
                 } while (true);
             }
 
-            string SetLife(int playerLife, int damageTaken, bool gameIsPlayed)
+            string SetLife(int damageTaken, bool gameIsPlayed)
             {
                 int newLife = 3;
-                if (playerLife >= damageTaken && gameIsPlayed == false)
+                if (playerLife != 0 && gameIsPlayed == true)
                 {
-                    newLife = playerLife - damageTaken;
-                    //TODO: återgå till spel vid position på något vänster
-                    gameIsPlayed = true;
+                    playerLife = playerLife - damageTaken;
+                    playerpos = TrackClass.GetPosition();
                 }
-                else if (gameIsPlayed == false && playerLife == 0)
+                else
                 {
                     GameOver();
                 }
-
                 return $"Life:    {newLife} / {playerLife}";
             }
 
@@ -229,16 +227,20 @@ namespace Drive
 
             void GameOver()
             {
-                gameIsPlayed = false;
                 Console.Clear();
-                Console.WriteLine("GAME OVER!");
-                Thread.Sleep(TimeSpan.FromMilliseconds(1000));
-                Console.WriteLine($"Your score: {points}");
-                Console.CursorVisible = true;
-                AddHighScore(points);
-                HighScore();
-                Thread.Sleep(5000);
-                Console.Clear();
+                if (playerLife == 0)
+                {
+                    Console.WriteLine("GAME OVER!");
+                    Thread.Sleep(TimeSpan.FromMilliseconds(1000));
+                    Console.WriteLine($"Your score: {points}");
+                    Console.CursorVisible = true;
+                    AddHighScore(points);
+                    HighScore();
+                    Thread.Sleep(5000);
+                    Console.Clear();
+                    TrackClass.banan.Clear();
+                    TrackClass.CreateTrack();
+                }
                 while (true)
                 {
                     Console.WriteLine("Play Again?");
@@ -248,6 +250,9 @@ namespace Drive
                     {
                         Console.Clear();
                         Menu();
+                        TrackClass.banan.Clear();
+                        TrackClass.CreateTrack();
+                        CountDown();
                         return;
                     }
                     else if (answer == 'N' || answer == 'n')
@@ -267,7 +272,7 @@ namespace Drive
 
             }
 
-            static int CountDown()
+            static void CountDown()
             {
                 for (int i = 3; i > 0; i--)
                 {
@@ -277,8 +282,7 @@ namespace Drive
                 Console.Write("Start!!!");
                 Thread.Sleep(500);
                 Console.Clear();
-                int pos = TrackClass.GetPosition();
-                return pos;
+                playerpos = TrackClass.GetPosition();
             }
         }
 

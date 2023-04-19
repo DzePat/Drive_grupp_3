@@ -53,7 +53,7 @@ namespace Drive
                         input = Console.ReadKey();
                         if (input.Key == ConsoleKey.LeftArrow) --pos;
                         else if (input.Key == ConsoleKey.RightArrow) ++pos;
-                        else if (input.Key == ConsoleKey.UpArrow) pos -= 83;
+                        else if (input.Key == ConsoleKey.UpArrow)if(pos + 83 > 200) pos -= 83;
                         else if (input.Key == ConsoleKey.DownArrow) if (pos + 83 < 1659) { pos += 83; }
                     };
                     StringBuilder sb = new StringBuilder(bana);

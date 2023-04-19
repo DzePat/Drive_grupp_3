@@ -83,7 +83,7 @@ namespace Drive
         }
         public static void CreateTrack()
         {
-
+            banan.Clear();
             int previous = 0;
             int RandomNumber;
             Random rnd = new Random();
@@ -152,7 +152,7 @@ namespace Drive
                 bana = temp + c;
                 temp = $"{bana}\n";
             }
-            for (int i = bana.Length-80; i < bana.Length; i++)
+            for (int i = (bana.Length)-80; i < bana.Length; i++)
             {
                 if (bana[i] == ' ')
                 {

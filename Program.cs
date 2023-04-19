@@ -22,6 +22,7 @@ namespace Drive
         public static int speed = 250;
         static void Main(string[] args)
         {
+            string defaultPointFile = "..\\..\\..\\points.txt";
             int points = 0;
             int time = 0;
             int pointsMultiplier = 10;
@@ -104,14 +105,14 @@ namespace Drive
                 Console.WriteLine("This is a car game.");
                 Console.WriteLine("Stay on the road!");
                 Console.WriteLine("Use left and right arrows to control your car.");
-                //Console.WriteLine($"Try to beat the highscore {XX} points"); //NYI
+                //NYI It´s possible to add new features/functions later.
                 Console.WriteLine("Press enter to start: ");
                 while (Console.ReadKey().Key != ConsoleKey.Enter)
                 {
                     //   
                 }
                 Console.Clear();
-                Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
+                Console.WriteLine("Choose difficulty:\n1: Easy\n2: Normal\n3: Hard");
                 ConsoleKeyInfo key = Console.ReadKey();
                 bool check = true;
                 while (check)
@@ -167,20 +168,20 @@ namespace Drive
 
             void HighScore()
             {
-                string[] playerpoints = File.ReadAllLines("points.txt");
+                string[] playerpoints = File.ReadAllLines(defaultPointFile);
                 int player = 0;
                 Console.WriteLine("Highscore list\nPoints      Player namne");
                 while (player < playerpoints.Length)
                 {
                     string[] printArray = playerpoints[player].Split("|");
-                    Console.WriteLine($"{printArray[0]}         {printArray[1]}");
+                    Console.WriteLine($"{printArray[0],6}         {printArray[1],9}");
                     player++;
                 }
             }
 
             void AddHighScore(int scoreplayer) //Can't add to list, only uppdate
             {
-                string[] playerpoints = File.ReadAllLines("points.txt");
+                string[] playerpoints = File.ReadAllLines(defaultPointFile);
                 int player = 0;
                 while (player < playerpoints.Length)
                 {
@@ -195,7 +196,7 @@ namespace Drive
                     }
                     player++;
                 }
-                using (StreamWriter file = new StreamWriter("points.txt"))
+                using (StreamWriter file = new StreamWriter(defaultPointFile))
                 {
                     foreach (string line in playerpoints)
                     {
@@ -212,6 +213,11 @@ namespace Drive
                 Console.WriteLine("GAME OVER!");
                 Thread.Sleep(TimeSpan.FromMilliseconds(1000));
                 Console.WriteLine($"Your score: {points}");
+                Console.CursorVisible = true;
+                AddHighScore(points);
+                HighScore();
+                Thread.Sleep(5000);
+                Console.Clear();
                 while (true)
                 {
                     Console.WriteLine("Play Again?");

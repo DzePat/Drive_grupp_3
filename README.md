@@ -1,6 +1,6 @@
 # Drive
 
-Create a text file named points.txt under bin/Debug/net6.0
+Needs a text file named points.txt:
 
 5|A
 4|B

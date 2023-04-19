@@ -82,17 +82,7 @@ namespace Drive
                     Console.SetWindowSize(width, height);
                 }
             }
-
-            static string ToString(char[] chars)
-            {
-                string thestring = "";
-                foreach (char c in chars)
-                {
-                    thestring = thestring + c;
-                }
-                return thestring;
-            }
-
+           
             void Menu()
             {
                 Console.WriteLine("This is a car game.");

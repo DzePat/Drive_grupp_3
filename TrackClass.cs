@@ -17,7 +17,7 @@ namespace Drive
             }
         }
         public static int startpoint = GetRandomNumber(30, 50);
-        public static int prevaddorsub = 0;
+        public static int prevRandom = 0;
         public static List<string> banan = new List<string>();
         public static int roadwidth = 20;
 
@@ -28,8 +28,8 @@ namespace Drive
             int max = 5;
             if (firstele[0] == ' ') max += 1;
             if (firstele[firstele.Length - 1] == ' ') min -= 1;
-            if (prevaddorsub < 0) max = 2; //vägen svängde till vänster förra gågngen 
-            if (prevaddorsub > 0) min = -1;
+            if (prevRandom < 0) max = 2; //vägen svängde till vänster förra gågngen 
+            if (prevRandom > 0) min = -1;
             if (firstele.First() == ' ') min = 1;
             if (firstele.Last() == ' ') max = -1;
             int randomnumber = GetRandomNumber(min, max);
@@ -46,7 +46,7 @@ namespace Drive
                 banan.Insert(0, firstele);
             }
             banan.RemoveAt(banan.Count- 1);
-            prevaddorsub = randomnumber;
+            prevRandom = randomnumber;
         }
 
         public static string MoveStringToRight(string main)
@@ -79,7 +79,7 @@ namespace Drive
 
 
             int previous = 0;
-            int addorsub;
+            int RandomNumber;
             Random rnd = new Random();
             for (int i = 0; i < 20; i++)
             {
@@ -107,10 +107,10 @@ namespace Drive
 
                     int min = -4;
                     int max = 5;
-                    if (prevaddorsub < 0) max = 2; //vägen svängde till vänster förra gågngen 
-                    if (prevaddorsub > 0) min = -1;
+                    if (prevRandom < 0) max = 2; //vägen svängde till vänster förra gågngen 
+                    if (prevRandom > 0) min = -1;
 
-                    addorsub = rnd.Next(min, max);
+                    RandomNumber = rnd.Next(min, max);
                     int index = 0;
                     foreach (char c in banan[previous])
                     {
@@ -120,17 +120,17 @@ namespace Drive
                         }
                         else { index++; }
                     }
-                    if (addorsub <= -1)
+                    if (RandomNumber <= -1)
                     {
                         banan.Add(MoveStringToLeft(banan[previous]));
                     }
-                    else if (addorsub >= 1)
+                    else if (RandomNumber >= 1)
                     {
                         banan.Add(MoveStringToRight(banan[previous]));
 
                     }
                     else { banan.Add(banan[previous]); }
-                    prevaddorsub = addorsub;
+                    prevRandom = RandomNumber;
                 }
                 previous = i;
             }

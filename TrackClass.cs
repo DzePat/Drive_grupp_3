@@ -16,6 +16,12 @@ namespace Drive
     public class TrackClass
     {
         private static Random random = new Random();
+        public static int startpoint = GetRandomNumber(30, 50);
+        public static int prevRandom = 0;
+        public static List<string> banan = new List<string>();
+        public static int roadwidth = 20;
+
+        //gives a random number between min and max
         public static int GetRandomNumber(int min, int max)
         {
             lock (random)
@@ -23,11 +29,8 @@ namespace Drive
                 return random.Next(min, max);
             }
         }
-        public static int startpoint = GetRandomNumber(30, 50);
-        public static int prevRandom = 0;
-        public static List<string> banan = new List<string>();
-        public static int roadwidth = 20;
-
+        //generates a string wich has moves to left/right and adds it as first index in the list
+        //then removes last index to keep the list of length 20
         public static void MoveForward()
         {
             string firstele = banan[0];
@@ -55,7 +58,7 @@ namespace Drive
             banan.RemoveAt(banan.Count- 1);
             prevRandom = randomnumber;
         }
-
+        //moves string one index forward
         public static string MoveStringToRight(string main)
         {
             string tomove = "";
@@ -66,7 +69,7 @@ namespace Drive
             }
             return tomove;
         }
-
+        // moves string one index backwards
         public static string MoveStringToLeft(string main)
         {
             string tomove = "";
@@ -81,6 +84,7 @@ namespace Drive
             tomove = tomove + first;
             return tomove;
         }
+        //generates a track with random movments
         public static void CreateTrack()
         {
             banan.Clear();
@@ -141,6 +145,7 @@ namespace Drive
                 previous = i;
             }
         }
+        // returns a position of the last row in the middle of empty spaces
         public static int GetPosition()
 
         {
@@ -165,6 +170,7 @@ namespace Drive
             return pos;
         }
 
+        //returns a string of empty spaces 
         public static string EmptySpaces(int x)
         {
             string empty = "";

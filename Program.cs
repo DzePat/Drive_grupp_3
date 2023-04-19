@@ -21,57 +21,60 @@ namespace Drive
 
         public static int speed = 250;
         public static int playerpos = 0;
+        public static int playerLife = 3;
+        public static string defaultPointFile = "..\\..\\..\\points.txt";
+        public static int points = 0;
+        public static int time = 0;
+        public static int pointsMultiplier = 10;
+        public static bool gameIsPlayed = true;
+        public static int damageTaken = 1;
+        public static int timecheck = 0;
         static void Main(string[] args)
         {
-            string defaultPointFile = "..\\..\\..\\points.txt";
-            int points = 0;
-            int time = 0;
-            int pointsMultiplier = 10;
-            bool gameIsPlayed = true;
-            int playerLife = 3;
-            int damageTaken = 1;
-
             ConsoleKeyInfo input;
-
             Menu();
-
-            if (gameIsPlayed)
+            Initialize();
+            TrackClass.CreateTrack();
+            CountDown();
+            string life = SetLife(0);
+            var sw = new Stopwatch();
+            sw.Start();
+            do
             {
-                Initialize();
-                TrackClass.CreateTrack();
-                CountDown();
-                string life = SetLife(0, gameIsPlayed);
-                var sw = new Stopwatch();
-                sw.Start();
-                do
+                string temp = "";
+                string bana = "";
+                foreach (string c in TrackClass.banan)
+            {
+                bana = temp + c;
+                temp = $"{bana}\n";
+            }
+                if (Console.KeyAvailable == true)
                 {
-                    string temp = "";
-                    string bana = "";
-                    foreach (string c in TrackClass.banan)
-                    {
-                        bana = temp + c;
-                        temp = $"{bana}\n";
-                    }
-                    if (Console.KeyAvailable == true)
-                    {
-                        input = Console.ReadKey();
-                        if (input.Key == ConsoleKey.LeftArrow) --playerpos;
-                        else if (input.Key == ConsoleKey.RightArrow) ++playerpos;
-                        else if (input.Key == ConsoleKey.UpArrow) { if (playerpos + 83 > 200) { playerpos -= 83; } }
-                        else if (input.Key == ConsoleKey.DownArrow) if (playerpos + 83 < 1659) { playerpos += 83; }
-                    };
-                    StringBuilder sb = new StringBuilder(bana);
-                    if (bana[playerpos] == ' ')
-                    {
-                        sb.Remove(playerpos, 1);
-                        sb.Insert(playerpos, "A");
-                    }
+                    input = Console.ReadKey();
+                    if (input.Key == ConsoleKey.LeftArrow) --playerpos;
+                    else if (input.Key == ConsoleKey.RightArrow) ++playerpos;
+                    else if (input.Key == ConsoleKey.UpArrow) { if (playerpos + 83 > 200) { playerpos -= 83; } }
+                    else if (input.Key == ConsoleKey.DownArrow) if (playerpos + 83 < 1659) { playerpos += 83; }
+                };
+                StringBuilder sb = new StringBuilder(bana);
+                if (bana[playerpos] == ' ')
+                {
+                    sb.Remove(playerpos, 1);
+                    sb.Insert(playerpos, "A");
+                }
                     else
                     {
                         sb.Remove(playerpos, 1);
                         sb.Insert(playerpos, "X");
                         Thread.Sleep(100);
-                        life = SetLife(1, gameIsPlayed);
+                        life = SetLife(1);
+                        if(timecheck == 1)
+                            {
+                                sw.Restart();
+                                time = 0;
+                                points = 0;
+                                timecheck = 0;                        
+                            }
                     }
                     //Life-chart
                     Console.WriteLine(life);
@@ -90,10 +93,11 @@ namespace Drive
                     Console.SetCursorPosition(0, 0);
                     Console.CursorVisible = false;
                     TrackClass.MoveForward();
-                } while (true);
-            }
-
-            string SetLife(int damageTaken, bool gameIsPlayed)
+            } while (true);
+        }
+            //takes damage as argument and returns the amount of lifes left 
+            //if player has 0 lifes initiates gameover method
+            static string SetLife(int damageTaken)
             {
                 int newLife = 3;
                 if (playerLife != 0 && gameIsPlayed == true)
@@ -107,7 +111,7 @@ namespace Drive
                 }
                 return $"Life:    {newLife} / {playerLife}";
             }
-
+            //initializes console window width/height
             static void Initialize()
             {
                 int width = 82;
@@ -118,8 +122,8 @@ namespace Drive
                     Console.SetWindowSize(width, height);
                 }
             }
-           
-            void Menu()
+            //prints out the menu and takes player input to select dificulty
+            static void Menu()
             {
                 Console.WriteLine("This is a car game.");
                 Console.WriteLine("Stay on the road!");
@@ -167,15 +171,15 @@ namespace Drive
                 Console.Clear();
                 gameIsPlayed = true;
             }
-
-            int CalculatePoints(int time, int pointsMultiplier)
+            //caculates the amount of points earned each second multplied by the pointsmultiplier
+            static int CalculatePoints(int time, int pointsMultiplier)
             {
                 int points = time * pointsMultiplier;
 
                 return points;
             }
-
-            string GetTopBarString(int time, int points)
+            //prints out the tob bar which contains timer elapsed and points scored
+            static string GetTopBarString(int time, int points)
             {
                 int minutes = time / 60;
                 int seconds = time % 60;
@@ -184,8 +188,8 @@ namespace Drive
 
                 return $"Time {secondsString}:{minutesString} ============= Points: {points}";
             }
-
-            void HighScore()
+            //prints out the current highscores
+            static void HighScore()
             {
                 string[] playerpoints = File.ReadAllLines(defaultPointFile);
                 int player = 0;
@@ -197,8 +201,8 @@ namespace Drive
                     player++;
                 }
             }
-
-            void AddHighScore(int scoreplayer) //Can't add to list, only uppdate
+            //adds player score to the highscores
+            static void AddHighScore(int scoreplayer) //Can't add to list, only uppdate
             {
                 string[] playerpoints = File.ReadAllLines(defaultPointFile);
                 int player = 0;
@@ -224,8 +228,10 @@ namespace Drive
                 }
             }
 
-
-            void GameOver()
+            //prints out the game over message if the player hit the wall and has 0 lives left.
+            //Adds player points to highscores and prints out the current highscores
+            //Asks player if you want to try again? if yes player resets on a new track with 0 time elapsed.
+            static void GameOver()
             {
                 Console.Clear();
                 if (playerLife == 0)
@@ -250,9 +256,8 @@ namespace Drive
                     {
                         Console.Clear();
                         Menu();
-                        TrackClass.banan.Clear();
-                        TrackClass.CreateTrack();
-                        CountDown();
+                        reset();
+                        timecheck = 1;
                         return;
                     }
                     else if (answer == 'N' || answer == 'n')
@@ -271,7 +276,7 @@ namespace Drive
                 }
 
             }
-
+            //starts to the coundown from 3 to 1
             static void CountDown()
             {
                 for (int i = 3; i > 0; i--)
@@ -284,7 +289,15 @@ namespace Drive
                 Console.Clear();
                 playerpos = TrackClass.GetPosition();
             }
+            //resets track, player life and starts the countdown again
+            static void reset()
+            {
+                TrackClass.banan.Clear();
+                TrackClass.CreateTrack();
+                playerLife = 3;
+                CountDown();
+            }
         }
 
     }
-}
+

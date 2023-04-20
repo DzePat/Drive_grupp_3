@@ -99,7 +99,8 @@ namespace Drive
         static int SetLife(int damageTaken)
         {
 
-            if (playerLife != 0 && gameIsPlayed == true)
+       //     if (playerLife != 0 && gameIsPlayed == true)
+            if (playerLife > 1 && gameIsPlayed == true)
             {
                 playerLife = playerLife - damageTaken;
                 playerpos = TrackClass.GetPosition();
@@ -238,7 +239,7 @@ namespace Drive
 
         {
             Console.Clear();
-            if (playerLife == 0)
+            if (true)
             {
                 Console.WriteLine("GAME OVER!");
                 Thread.Sleep(TimeSpan.FromMilliseconds(1000));

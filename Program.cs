@@ -195,7 +195,7 @@ namespace Drive
             string minutesString = minutes.ToString("D2");
             string secondsString = seconds.ToString("D2");
 
-            return $"Time {secondsString}:{minutesString} ============= Points: {points} ============ Life:  {newLife} / {playerLife}";
+            return $"Time {minutesString} : {secondsString} ============= Points: {points} ============ Life:  {newLife} / {playerLife}";
         }
         //prints out the current highscores
         static void HighScore()

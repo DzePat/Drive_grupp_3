@@ -78,6 +78,7 @@ namespace Drive
                     }
                 }
 
+
                 // Top bar
                 points = CalculatePoints(time, pointsMultiplier);
                 var topBar = GetTopBarString(time, points, life);
@@ -98,7 +99,9 @@ namespace Drive
         //if player has 0 lifes initiates gameover method
         static int SetLife(int damageTaken)
         {
+
             if (playerLife != 0 && gameIsPlayed == true)
+
             {
                 playerLife = playerLife - damageTaken;
                 playerpos = TrackClass.GetPosition();
@@ -246,11 +249,14 @@ namespace Drive
 
 
 
-            //prints out the game over message if the player hit the wall and has 0 lives left.
-            //Adds player points to highscores and prints out the current highscores
-            //Asks player if you want to try again? if yes player resets on a new track with 0 time elapsed.
-            static void GameOver()
 
+        //prints out the game over message if the player hit the wall and has 0 lives left.
+        //Adds player points to highscores and prints out the current highscores
+        //Asks player if you want to try again? if yes player resets on a new track with 0 time elapsed.
+        static void GameOver()
+        {
+            Console.Clear();
+            if (true)
             {
                 Console.Clear();
                 if (playerLife == 0)
@@ -293,6 +299,7 @@ namespace Drive
                     }
                 }
             }
+        }
             //starts to the coundown from 3 to 1
             static void CountDown()
             {
@@ -322,4 +329,5 @@ namespace Drive
         }
 
     }
+
 

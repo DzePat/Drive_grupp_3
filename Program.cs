@@ -75,9 +75,7 @@ namespace Drive
                         points = 0;
                         timecheck = 0;
                     }
-                }
-                //Life-chart
-               
+                }         
                 // Top bar
                 points = CalculatePoints(time, pointsMultiplier);
                 var topBar = GetTopBarString(time, points, life);

@@ -23,6 +23,7 @@ namespace Drive
         public static int playerpos = 0;
         public static int playerLife = 3;
         public static string defaultPointFile = "..\\..\\..\\points.txt";
+        public static string otherOSPoiintFile = "../../../points.txt";
         public static int points = 0;
         public static int time = 0;
         public static int pointsMultiplier = 10;
@@ -76,8 +77,7 @@ namespace Drive
                         timecheck = 0;
                     }
                 }
-                //Life-chart
-               
+
                 // Top bar
                 points = CalculatePoints(time, pointsMultiplier);
                 var topBar = GetTopBarString(time, points, life);
@@ -98,7 +98,6 @@ namespace Drive
         //if player has 0 lifes initiates gameover method
         static int SetLife(int damageTaken)
         {
-
             if (playerLife != 0 && gameIsPlayed == true)
             {
                 playerLife = playerLife - damageTaken;
@@ -111,7 +110,7 @@ namespace Drive
             return playerLife;
         }
 
-        //initializes console window width/height
+        //initializes console window width/height 
         static void Initialize()
         {
             int width = 82;
@@ -120,6 +119,10 @@ namespace Drive
             if (OperatingSystem.IsWindows())
             {
                 Console.SetWindowSize(width, height);
+            }
+            if (!OperatingSystem.IsWindows())
+            {
+                defaultPointFile = otherOSPoiintFile;
             }
         }
         //prints out the menu and takes player input to select dificulty
@@ -132,11 +135,12 @@ namespace Drive
             Console.WriteLine("Press enter to start: ");
             while (Console.ReadKey().Key != ConsoleKey.Enter)
             {
-                //   
+                Console.WriteLine("\nPlease press the Enter Key");
             }
             Console.Clear();
-            Console.WriteLine("Choose difficulty:\n1: Easy\n2: Normal\n3: Hard");
-            ConsoleKeyInfo key = Console.ReadKey();
+            //Console.WriteLine("Choose difficulty:\n1: Easy\n2: Normal\n3: Hard");
+            //onsole.ReadKey();
+            ConsoleKeyInfo key = GetUserInput("Choose difficulty:\n1: Easy\n2: Normal\n3: Hard");
             bool check = true;
             while (check)
             {
@@ -164,8 +168,7 @@ namespace Drive
                 else
                 {
                     Console.Clear();
-                    Console.WriteLine("Choose dificulty:\n1: Easy\n2: Normal\n3: Hard");
-                    key = Console.ReadKey();
+                    key = GetUserInput("Choose difficulty:\n1: Easy\n2: Normal\n3: Hard \nPlease Enter 1, 2 or 3");
                 }
             }
             Console.Clear();
@@ -188,119 +191,135 @@ namespace Drive
             int seconds = time % 60;
             string minutesString = minutes.ToString("D2");
             string secondsString = seconds.ToString("D2");
-            
+
             return $"Time {secondsString}:{minutesString} ============= Points: {points} ============ Life:  {newLife} / {playerLife}";
         }
         //prints out the current highscores
         static void HighScore()
         {
-            string[] playerpoints = File.ReadAllLines(defaultPointFile);
+            string[] playerPoints = File.ReadAllLines(defaultPointFile);
             int player = 0;
             Console.WriteLine("Highscore list\nPoints      Player namne");
-            while (player < playerpoints.Length)
+            while (player < playerPoints.Length)
             {
-                string[] printArray = playerpoints[player].Split("|");
+                string[] printArray = playerPoints[player].Split("|");
                 Console.WriteLine($"{printArray[0],6}         {printArray[1],9}");
                 player++;
             }
         }
         //adds player score to the highscores
-        static void AddHighScore(int scoreplayer) //Can't add to list, only uppdate
+        static void AddHighScore(int scoreplayer)
         {
-            string[] playerpoints = File.ReadAllLines(defaultPointFile);
-            int player = 0;
-            while (player < playerpoints.Length)
+            string[] playerPoints = File.ReadAllLines(defaultPointFile);
+
+            int i = 0;
+            int arrayLength = playerPoints.Length;
+
+            while (i < arrayLength)
             {
-                string[] printArray = playerpoints[player].Split("|");
+                string[] printArray = playerPoints[i].Split("|");
                 if (scoreplayer > Int32.Parse(printArray[0]))
                 {
-                    Console.WriteLine($"Congratulations, you are {player + 1} on the highscore list");
+                    Console.WriteLine($"Congratulations, you are {i + 1} on the highscore list");
                     Console.Write("Your name?: ");
-                    string newPlayerPoints = $"{scoreplayer.ToString()}|{Console.ReadLine()}";
-                    playerpoints[player] = newPlayerPoints;
+                    string newPlayerName = Console.ReadLine();
+                    string newPlayerPoints = $"{scoreplayer.ToString()}|{newPlayerName}";
+                    for (int j = arrayLength - 1; j > i; j--)
+                    {
+                        playerPoints[j] = playerPoints[j - 1];
+                    }
+                    playerPoints[i] = newPlayerPoints;
+
                     break;
                 }
-                player++;
+                i++;
             }
+
             using (StreamWriter file = new StreamWriter(defaultPointFile))
             {
-                foreach (string line in playerpoints)
+                foreach (string line in playerPoints)
                 {
                     file.WriteLine(line);
                 }
             }
         }
 
-        //prints out the game over message if the player hit the wall and has 0 lives left.
-        //Adds player points to highscores and prints out the current highscores
-        //Asks player if you want to try again? if yes player resets on a new track with 0 time elapsed.
-        static void GameOver()
 
-        {
-            Console.Clear();
-            if (playerLife == 0)
+
+            //prints out the game over message if the player hit the wall and has 0 lives left.
+            //Adds player points to highscores and prints out the current highscores
+            //Asks player if you want to try again? if yes player resets on a new track with 0 time elapsed.
+            static void GameOver()
+
             {
-                Console.WriteLine("GAME OVER!");
-                Thread.Sleep(TimeSpan.FromMilliseconds(1000));
-                Console.WriteLine($"Your score: {points}");
-                Console.CursorVisible = true;
-                AddHighScore(points);
-                HighScore();
-                Thread.Sleep(5000);
                 Console.Clear();
+                if (playerLife == 0)
+                {
+                    Console.WriteLine("GAME OVER!");
+                    Thread.Sleep(TimeSpan.FromMilliseconds(1000));
+                    Console.WriteLine($"Your score: {points}");
+                    Console.CursorVisible = true;
+                    AddHighScore(points);
+                    HighScore();
+                    Thread.Sleep(5000);
+                    Console.Clear();
+                    TrackClass.banan.Clear();
+                    TrackClass.CreateTrack();
+                }
+                while (true)
+                {
+                    Console.WriteLine("Play Again? \n 'Y' / 'N'");
+                    char answer = Console.ReadKey().KeyChar;
+                    if (answer == 'Y' || answer == 'y')
+                    {
+                        Console.Clear();
+                        Menu();
+                        reset();
+                        timecheck = 1;
+                        return;
+                    }
+                    else if (answer == 'N' || answer == 'n')
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Thanks for playing");
+                        Thread.Sleep(TimeSpan.FromMilliseconds(1000));
+                        Environment.Exit(0);
+                        return;
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid answer, please answer 'Y' for yes or 'N' for no");
+                    }
+                }
+            }
+            //starts to the coundown from 3 to 1
+            static void CountDown()
+            {
+                for (int i = 3; i > 0; i--)
+                {
+                    Console.Write($"{i}...");
+                    Thread.Sleep(500);
+                }
+                Console.Write("Start!!!");
+                Thread.Sleep(500);
+                Console.Clear();
+                playerpos = TrackClass.GetPosition();
+            }
+            //resets track, player life and starts the countdown again
+            static void reset()
+            {
                 TrackClass.banan.Clear();
                 TrackClass.CreateTrack();
+                playerLife = 3;
+                CountDown();
             }
-            while (true)
+            static ConsoleKeyInfo GetUserInput(string prompt)
             {
-                Console.WriteLine("Play Again?");
-                Console.WriteLine("'Y' / 'N'");
-                char answer = Console.ReadKey().KeyChar;
-                if (answer == 'Y' || answer == 'y')
-                {
-                    Console.Clear();
-                    Menu();
-                    reset();
-                    timecheck = 1;
-                    return;
-                }
-                else if (answer == 'N' || answer == 'n')
-                {
-                    Console.Clear();
-                    Console.WriteLine("Thanks for playing");
-                    Thread.Sleep(TimeSpan.FromMilliseconds(1000));
-                    Environment.Exit(0);
-                    return;
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Invalid answer, please answer 'Y' for yes or 'N' for no");
-                }
+                Console.Write(prompt);
+                return Console.ReadKey();
             }
         }
-        //starts to the coundown from 3 to 1
-        static void CountDown()
-        {
-            for (int i = 3; i > 0; i--)
-            {
-                Console.Write($"{i}...");
-                Thread.Sleep(500);
-            }
-            Console.Write("Start!!!");
-            Thread.Sleep(500);
-            Console.Clear();
-            playerpos = TrackClass.GetPosition();
-        }
-        //resets track, player life and starts the countdown again
-        static void reset()
-        {
-            TrackClass.banan.Clear();
-            TrackClass.CreateTrack();
-            playerLife = 3;
-            CountDown();
-        }
-    }
 
-}
+    }
 
